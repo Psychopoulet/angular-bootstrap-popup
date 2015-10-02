@@ -1,4 +1,4 @@
-app.service('$popup', function() {
+angular.module('ngBootstrapPopup', []).service('$popup', function() {
 
     "use strict";
 
