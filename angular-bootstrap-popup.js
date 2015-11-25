@@ -298,10 +298,7 @@ angular.module('ngBootstrapPopup', [])
 				if ($scope.buttonYes && '' != $scope.buttonYes) {
 					$popup.lng.buttons.yes = $scope.buttonYes;
 				}
-
-				console.log($popup.lng.titles);
-				console.log($popup.lng.buttons);
-
+				
 			}
 
 		};
