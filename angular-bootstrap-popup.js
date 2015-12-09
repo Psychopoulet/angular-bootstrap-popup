@@ -33,14 +33,14 @@ angular.module('ngBootstrapPopup', [])
 
 				function _create(p_stPopupOptions, p_stModaleOptions) {
 
-					var clModal, clDialog, clContent, clHeader, clBody, clFooter, clButtonClose;
+					var clModal, clDialog, clContent, clHeader, clBody, clFooter;
 
 					p_stPopupOptions = (p_stPopupOptions) ? p_stPopupOptions : {};
 					p_stModaleOptions = (p_stModaleOptions) ? p_stModaleOptions : {};
 
 					clModal = jQuery('<div class="modal fade text-left"></div>');
 
-						clDialog = jQuery('<div class="modal-dialog modal-' + ((p_stPopupOptions.size && 'large' == p_stPopupOptions.size) ? 'lg' : 'sm') + ' modal-vertical-centered"></div>');
+						clDialog = jQuery('<div class="modal-dialog modal-' + ((p_stPopupOptions.size && 'large' === p_stPopupOptions.size) ? 'lg' : 'sm') + ' modal-vertical-centered"></div>');
 
 							clContent = jQuery('<div class="modal-content"></div>');
 
@@ -48,7 +48,7 @@ angular.module('ngBootstrapPopup', [])
 
 									if (p_stPopupOptions.title && 0 < p_stPopupOptions.title.length) {
 
-										if (1 == p_stPopupOptions.title.length) {
+										if (1 === p_stPopupOptions.title.length) {
 											clHeader.text(p_stPopupOptions.title.toUpperCase());
 										}
 										else {
@@ -69,7 +69,7 @@ angular.module('ngBootstrapPopup', [])
 
 									if (p_stPopupOptions.content && 0 < p_stPopupOptions.content.length) {
 
-										if (1 == p_stPopupOptions.content.length) {
+										if (1 === p_stPopupOptions.content.length) {
 											clBody.text(p_stPopupOptions.content.toUpperCase());
 										}
 										else {
@@ -115,7 +115,7 @@ angular.module('ngBootstrapPopup', [])
 															if ('function' === typeof fClick) {
 																fClick();
 															}
-															else if ('close' == fClick) {
+															else if ('close' === fClick) {
 																clModal.modal('hide');
 															}
 
@@ -226,7 +226,7 @@ angular.module('ngBootstrapPopup', [])
 							}
 						],
 						shown : function () {
-							jQuery('#' + sId).focus()
+							jQuery('#' + sId).focus();
 						}
 					},
 					{
@@ -263,6 +263,8 @@ angular.module('ngBootstrapPopup', [])
 	})
 
 	.directive('popupTranslate', ['$popup', function($popup) {
+
+        "use strict";
 
 		return {
 
