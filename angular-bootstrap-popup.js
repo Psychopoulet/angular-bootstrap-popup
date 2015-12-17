@@ -164,7 +164,7 @@ angular.module('ngBootstrapPopup', [])
 				this.alert = function (p_sMessage, p_sTitle) {
 
 					return _create({
-						title : (p_sTitle) ? p_sTitle : that.lng.titles.alert,
+						title : (p_sTitle && '' != p_sTitle) ? p_sTitle : that.lng.titles.alert,
 						contentHTML : p_sMessage,
 						buttons : [
 							{
@@ -183,7 +183,7 @@ angular.module('ngBootstrapPopup', [])
 				this.confirm = function (p_sMessage, p_sTitle, p_fOnYes, p_fOnNo) {
 
 					return _create({
-						title : (p_sTitle) ? p_sTitle : that.lng.titles.confirm,
+						title : (p_sTitle && '' != p_sTitle) ? p_sTitle : that.lng.titles.confirm,
 						contentHTML : p_sMessage,
 						buttons : [
 							{
@@ -204,13 +204,21 @@ angular.module('ngBootstrapPopup', [])
 
 				};
 
-				this.prompt = function (p_sTitle, p_fOnConfirm, p_fOnAbort) {
+				this.prompt = function (p_sTitle, p_sValue, p_fOnConfirm, p_fOnAbort) {
 
-					p_sTitle = (p_sTitle) ? p_sTitle : that.lng.titles.prompt;
+					p_sTitle = (p_sTitle && '' != p_sTitle) ? p_sTitle : that.lng.titles.prompt;
 
 					++m_nCountPrompt;
 
-					var sId = 'idPopupFormPrompt' + m_nCountPrompt;
+					var sId = 'idPopupFormPrompt' + m_nCountPrompt,
+                        sInput = '';
+
+                    if (p_sValue && '' != p_sValue) {
+                        sInput = '<input id="' + sId + '" type="text" class="form-control" value="' + p_sValue + '" />';
+                    }
+                    else {
+                        sInput = '<input id="' + sId + '" type="text" class="form-control" />';
+                    }
 
 					return _create({
 						title : p_sTitle,
@@ -218,7 +226,7 @@ angular.module('ngBootstrapPopup', [])
                                             '<label for="' + sId + '">' +
                                                 p_sTitle +
                                             '</label>' +
-                                            '<input id="' + sId + '" type="text" class="form-control" />' +
+                                            sInput +
                                         '</div>',
 						buttons : [
 							{
@@ -245,7 +253,7 @@ angular.module('ngBootstrapPopup', [])
 				this.iframe = function (p_sUrl, p_sTitle) {
 
 					return _create({
-						title : (p_sTitle) ? p_sTitle : that.lng.titles.preview,
+						title : (p_sTitle && '' != p_sTitle) ? p_sTitle : that.lng.titles.preview,
 						contentHTML :   '<div class="embed-responsive embed-responsive-16by9">' +
                                             '<iframe class="embed-responsive-item" src="' + p_sUrl + '" frameborder="0" allowfullscreen></iframe>' +
                                         '</div>',
@@ -267,7 +275,7 @@ angular.module('ngBootstrapPopup', [])
                 this.sound = function (p_sUrl, p_sTitle) {
 
                     return _create({
-                            title : (p_sTitle) ? p_sTitle : that.lng.titles.sound,
+                            title : (p_sTitle && '' != p_sTitle) ? p_sTitle : that.lng.titles.sound,
                             contentHTML :   '<div class="row">' +
                                                 '<audio class="col-xs-12" controls autoplay>' +
                                                     'Votre navigateur ne supporte pas l\'élément <code>audio</code>.' +
