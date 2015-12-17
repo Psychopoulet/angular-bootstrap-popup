@@ -25,7 +25,8 @@ Usage :
 				$popup.alert('no');
 			});
 
-			$popup.preview('https://www.youtube.com/embed/zIA0kaGFIhQ');
+			$popup.iframe('https://www.youtube.com/embed/zIA0kaGFIhQ');
+			$popup.sound('https://test.fr/test.mp3');
 
 			$popup.closeAll();
 
@@ -43,6 +44,7 @@ Translation :
 		data-title-confirm="Confirmation"
 		data-title-prompt="Saisie"
 		data-title-preview="Prévisualisation"
+		data-title-sound="Son"
 
 		data-button-ok="Ok"
 		data-button-close="Fermer"
