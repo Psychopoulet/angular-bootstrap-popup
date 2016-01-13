@@ -17,7 +17,7 @@ Usage :
 		
 			"use strict";
 
-			$popup.prompt('', $popup.alert);
+			$popup.prompt('', '', $popup.alert);
 
 			$popup.confirm('Confirm ?', '', function() {
 				$popup.alert('yes');
