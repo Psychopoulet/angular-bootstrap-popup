@@ -313,6 +313,7 @@ angular.module('ngBootstrapPopup', [])
 
 				this.closeAll = function () {
 					jQuery('.modal').modal('hide');
+					jQuery('.modal-backdrop').remove();
 				};
 
 	})
