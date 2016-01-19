@@ -30,9 +30,9 @@ angular.module('ngBootstrapPopup', [])
 
 		// methodes
 
-			// private
+			// public
 
-				function _create(p_stPopupOptions, p_stModaleOptions) {
+				this.create = function (p_stPopupOptions, p_stModaleOptions) {
 
 					var clModal, clDialog, clContent, clHeader, clBody, clFooter;
 
@@ -157,13 +157,11 @@ angular.module('ngBootstrapPopup', [])
 
 					return clModal;
 
-				}
-
-			// public
+				};
 
 				this.alert = function (p_sMessage, p_sTitle, p_fOnClose) {
 
-					return _create({
+					return that.create({
 						title : (p_sTitle && '' != p_sTitle) ? p_sTitle : that.lng.titles.alert,
 						contentHTML : p_sMessage,
 						buttons : [
@@ -182,7 +180,7 @@ angular.module('ngBootstrapPopup', [])
 
 				this.confirm = function (p_sMessage, p_sTitle, p_fOnYes, p_fOnNo) {
 
-					return _create({
+					return that.create({
 						title : (p_sTitle && '' != p_sTitle) ? p_sTitle : that.lng.titles.confirm,
 						contentHTML : p_sMessage,
 						buttons : [
@@ -220,7 +218,7 @@ angular.module('ngBootstrapPopup', [])
 						sInput = '<input id="' + sId + '" type="text" class="form-control" />';
 					}
 
-					return _create({
+					return that.create({
 						title : p_sTitle,
 						contentHTML :   '<div class="form-group">'+
 											'<label for="' + sId + '">' +
@@ -252,7 +250,7 @@ angular.module('ngBootstrapPopup', [])
 
 				this.iframe = function (p_sUrl, p_sTitle) {
 
-					return _create({
+					return that.create({
 						title : (p_sTitle && '' != p_sTitle) ? p_sTitle : that.lng.titles.preview,
 						contentHTML :   '<div class="embed-responsive embed-responsive-16by9">' +
 											'<iframe class="embed-responsive-item" src="' + p_sUrl + '" frameborder="0" allowfullscreen></iframe>' +
@@ -283,7 +281,7 @@ angular.module('ngBootstrapPopup', [])
 
 						document.title = p_sTitle;
 
-						clResult = _create({
+						clResult = that.create({
 							title : (p_sTitle && '' != p_sTitle) ? p_sTitle : that.lng.titles.sound,
 							contentHTML :   '<div class="row">' +
 												'<audio class="col-xs-12" controls>' +
