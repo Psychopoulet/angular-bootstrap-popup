@@ -7,7 +7,7 @@ Usage :
 ==========
 
 	<script type="text/javascript" src="/libs/angular.js"></script>
-	<script type="text/javascript" src="/libs/angular-bootstrap-popup.js"></script>
+	<script type="text/javascript" src="/libs/angular-bootstrap-popup.min.js"></script>
 	
 	<script type="text/javascript">
 	
