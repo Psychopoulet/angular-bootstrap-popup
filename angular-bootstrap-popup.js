@@ -211,7 +211,7 @@ angular.module('ngBootstrapPopup', [])
 				var sId = 'idPopupFormPrompt' + m_nCountPrompt,
 					sInput = '';
 
-				if (p_sValu) {
+				if (p_sValue) {
 					sInput = '<input id="' + sId + '" type="text" class="form-control" value="' + p_sValue + '" />';
 				}
 				else {
