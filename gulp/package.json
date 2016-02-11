@@ -1,0 +1,19 @@
+{
+  "name": "angular-bootstrap-popup_compilator",
+  "version": "1.0.0",
+  "description": "gulp file to check and minify angular-bootstrap-popup",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "jshint": "^2.9.1",
+    "gulp": "^3.9.1",
+    "gulp-plumber": "^1.1.0",
+    "gulp-jshint": "^2.0.0",
+    "gulp-minify": "^0.0.5"
+  },
+  "devDependencies": { },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sébastien VIDAL",
+  "license": "ISC"
+}
