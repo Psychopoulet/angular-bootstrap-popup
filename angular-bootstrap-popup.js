@@ -392,12 +392,12 @@ angular.module('ngBootstrapPopup', [])
 										source = { url : source, type : '' };
 									}
 
-									if ('' == source.type) {
+									if ('' === source.type) {
 										var t = source.url.split('.');
 										source.type = (t.length) ? t[t.length-1] : '';
 									}
 
-									if ('' == source.type) {
+									if ('' === source.type) {
 										params.contentHTML += '<source src="' + source.url + '"/>';
 									}
 									else {
