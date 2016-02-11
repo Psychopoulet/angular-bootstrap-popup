@@ -20,6 +20,10 @@ angular.module('ngBootstrapPopup', [])
 					preview : 'Preview',
 					sound : 'Sound'
 				},
+				errors : {
+					audio : 'Your browser does not support the <code>audio</code> element.',
+					url : 'Missing url.'
+				},
 				buttons : {
 					ok : 'Ok',
 					close : 'Close',
@@ -39,7 +43,7 @@ angular.module('ngBootstrapPopup', [])
 				p_stPopupOptions = (p_stPopupOptions) ? p_stPopupOptions : {};
 				p_stModaleOptions = (p_stModaleOptions) ? p_stModaleOptions : {};
 
-				clModal = jQuery('<div class="modal fade text-left"></div>');
+				clModal = jQuery('<div class="modal angular-bootstrap-popup fade text-left"></div>');
 
 					clDialog = jQuery('<div class="modal-dialog modal-' + ((p_stPopupOptions.size && 'large' === p_stPopupOptions.size) ? 'lg' : 'sm') + ' modal-vertical-centered"></div>');
 
@@ -161,29 +165,63 @@ angular.module('ngBootstrapPopup', [])
 
 			this.alert = function (p_sMessage, p_sTitle, p_fOnClose) {
 
-				return that.create({
-					title : (p_sTitle) ? p_sTitle : that.lng.titles.alert,
-					contentHTML : p_sMessage,
-					buttons : [
+				var params = {};
+
+				if ('object' === typeof p_sMessage) {
+
+					params.contentHTML = ('string' === typeof p_sMessage.message) ? p_sMessage.message : '';
+					params.title = ('string' === typeof p_sMessage.title) ? p_sMessage.title : that.lng.titles.alert;
+					params.buttons = [
+						{
+							text : that.lng.buttons.ok,
+							click : ('function' === typeof p_sMessage.onclose) ? [ p_sMessage.onclose, 'close' ] : 'close'
+						}
+					];
+
+				}
+				else {
+
+					params.contentHTML = ('string' === typeof p_sMessage) ? p_sMessage : '';
+					params.title = ('string' === typeof p_sTitle) ? p_sTitle : that.lng.titles.alert;
+					params.buttons = [
 						{
 							text : that.lng.buttons.ok,
 							click : ('function' === typeof p_fOnClose) ? [ p_fOnClose, 'close' ] : 'close'
 						}
-					]
-				},
-				{
-					backdrop : 'static',
-					keyboard : true
-				});
+					];
+
+				}
+
+				return that.create(params, { backdrop : 'static', keyboard : true });
 
 			};
 
 			this.confirm = function (p_sMessage, p_sTitle, p_fOnYes, p_fOnNo) {
 
-				return that.create({
-					title : (p_sTitle) ? p_sTitle : that.lng.titles.confirm,
-					contentHTML : p_sMessage,
-					buttons : [
+				var params = {};
+
+				if ('object' === typeof p_sMessage) {
+
+					params.contentHTML = ('string' === typeof p_sMessage.message) ? p_sMessage.message : '';
+					params.title = ('string' === typeof p_sMessage.title) ? p_sMessage.title : that.lng.titles.confirm;
+					params.buttons = [
+						{
+							cls : 'btn-primary',
+							text : that.lng.buttons.yes,
+							click : ('function' === typeof p_sMessage.onyes) ? [ p_sMessage.onyes, 'close' ] : 'close'
+						},
+						{
+							text : that.lng.buttons.no,
+							click : ('function' === typeof p_sMessage.onno) ? [ p_sMessage.onno, 'close' ] : 'close'
+						}
+					];
+
+				}
+				else {
+
+					params.contentHTML = ('string' === typeof p_sMessage) ? p_sMessage : '';
+					params.title = ('string' === typeof p_sTitle) ? p_sTitle : that.lng.titles.confirm;
+					params.buttons = [
 						{
 							cls : 'btn-primary',
 							text : that.lng.buttons.yes,
@@ -193,40 +231,48 @@ angular.module('ngBootstrapPopup', [])
 							text : that.lng.buttons.no,
 							click : ('function' === typeof p_fOnNo) ? [ p_fOnNo, 'close' ] : 'close'
 						}
-					]
-				},
-				{
-					backdrop : 'static',
-					keyboard : true
-				});
+					];
+
+				}
+
+				return that.create(params, { backdrop : 'static', keyboard : true });
 
 			};
 
 			this.prompt = function (p_sTitle, p_sValue, p_fOnConfirm, p_fOnAbort) {
 
-				p_sTitle = (p_sTitle) ? p_sTitle : that.lng.titles.prompt;
-
 				++m_nCountPrompt;
 
-				var sId = 'idPopupFormPrompt' + m_nCountPrompt,
-					sInput = '';
+				var params = {},
+					sId = 'idPopupFormPrompt' + m_nCountPrompt;
 
-				if (p_sValue) {
-					sInput = '<input id="' + sId + '" type="text" class="form-control" value="' + p_sValue + '" />';
+				if ('object' === typeof p_sTitle) {
+
+					params.val = ('string' === typeof p_sTitle.val) ? p_sTitle.val : '';
+					params.placeholder = ('string' === typeof p_sTitle.placeholder) ? p_sTitle.placeholder : '';
+
+					params.contentHTML = '<input id="' + sId + '" type="text" class="form-control" value="' + p_sTitle.val + '" placeholder="' + params.placeholder + '" />';
+					params.title = ('string' === typeof p_sTitle.title) ? p_sTitle.title : that.lng.titles.prompt;
+					params.label = ('string' === typeof p_sTitle.label) ? '<label for="' + sId + '">' + p_sTitle.label + '</label>' : '';
+					params.buttons = [
+						{
+							cls : 'btn-primary',
+							text : that.lng.buttons.ok,
+							click : ('function' === typeof p_sTitle.onconfirm) ? [ function() { p_sTitle.onconfirm(jQuery('#' + sId).val()); }, 'close' ] : 'close'
+						},
+						{
+							text : that.lng.buttons.close,
+							click : ('function' === typeof p_sTitle.onabort) ? [ p_sTitle.onabort, 'close' ] : 'close'
+						}
+					];
+
 				}
 				else {
-					sInput = '<input id="' + sId + '" type="text" class="form-control" />';
-				}
 
-				return that.create({
-					title : p_sTitle,
-					contentHTML :   '<div class="form-group">'+
-										'<label for="' + sId + '">' +
-											p_sTitle +
-										'</label>' +
-										sInput +
-									'</div>',
-					buttons : [
+					params.contentHTML = '<input id="' + sId + '" type="text" class="form-control" value="' + (('string' === typeof p_sValue) ? p_sValue : '') + '" />';
+					params.title = ('string' === typeof p_sTitle) ? p_sTitle : that.lng.titles.prompt;
+					params.label = '';
+					params.buttons = [
 						{
 							cls : 'btn-primary',
 							text : that.lng.buttons.ok,
@@ -236,82 +282,151 @@ angular.module('ngBootstrapPopup', [])
 							text : that.lng.buttons.close,
 							click : ('function' === typeof p_fOnAbort) ? [ p_fOnAbort, 'close' ] : 'close'
 						}
-					],
-					shown : function () {
-						jQuery('#' + sId).focus();
-					}
-				},
-				{
-					backdrop : 'static',
-					keyboard : true
-				});
+					];
+
+				}
+
+				params.contentHTML = '<div class="form-group">' + params.label + params.contentHTML + '</div>';
+				params.shown = function () { jQuery('#' + sId).focus().val(jQuery('#' + sId).val()); };
+
+				return that.create(params, { backdrop : 'static', keyboard : true });
 
 			};
 
-			this.iframe = function (p_sUrl, p_sTitle) {
+			this.iframe = function (p_sUrl, p_sTitle, p_fOnClose) {
 
-				return that.create({
-					title : (p_sTitle) ? p_sTitle : that.lng.titles.preview,
-					contentHTML :   '<div class="embed-responsive embed-responsive-16by9">' +
-										'<iframe class="embed-responsive-item" src="' + p_sUrl + '" frameborder="0" allowfullscreen></iframe>' +
-									'</div>',
-					size : 'large',
-					buttons : [
+				var params = {};
+
+				if ('object' === typeof p_sUrl) {
+
+					params.url = ('string' === typeof p_sUrl.url) ? p_sUrl.url : '';
+					params.title = ('string' === typeof p_sUrl.title) ? p_sUrl.title : that.lng.titles.preview;
+					params.size = ('string' === typeof p_sUrl.size) ? p_sUrl.size : 'large';
+					params.buttons = [
 						{
 							text : that.lng.buttons.close,
-							click : 'close'
+							click : ('function' === typeof p_sUrl.onclose) ? [ p_sUrl.onclose, 'close' ] : 'close'
 						}
-					]
-				},
-				{
-					backdrop : 'static',
-					keyboard : true
-				});
+					];
+
+				}
+				else {
+
+					params.url = ('string' === typeof p_sUrl) ? p_sUrl : '';
+					params.title = ('string' === typeof p_sTitle) ? p_sTitle : that.lng.titles.preview;
+					params.size = 'large';
+					params.buttons = [
+						{
+							text : that.lng.buttons.close,
+							click : ('function' === typeof p_fOnClose) ? [ p_fOnClose, 'close' ] : 'close'
+						}
+					];
+
+				}
+
+				if ('' === params.url) {
+					return that.alert(that.lng.errors.url);
+				}
+				else {
+
+					params.contentHTML  = '<div class="embed-responsive embed-responsive-16by9">';
+						params.contentHTML += '<iframe class="embed-responsive-item" src="' + params.url + '" frameborder="0" allowfullscreen></iframe>';
+					params.contentHTML += '</div>';
+	 
+					return that.create(params, { backdrop : 'static', keyboard : true });
+
+				}
 
 			};
 
-			this.sound = function (p_sUrl, p_sTitle) {
+			this.sound = function (p_sUrl, p_sTitle, p_fOnClose) {
 
-				var clResult, sDocumentTitle = document.title;
+				var params = {}, popup, documentTitle = document.title;
 
 					function _close() {
-						clResult.modal('hide');
-						document.title = sDocumentTitle;
+						document.title = documentTitle;
 					}
 
-					document.title = p_sTitle;
+					if ('object' === typeof p_sUrl) {
 
-					clResult = that.create({
-						title : (p_sTitle) ? p_sTitle : that.lng.titles.sound,
-						contentHTML :   '<div class="row">' +
-											'<audio class="col-xs-12" controls>' +
-												'Votre navigateur ne supporte pas l\'Ã©lÃ©ment <code>audio</code>.' +
-												'<source src="' + p_sUrl + '" type="audio/wav">' +
-											'</audio>' +
-										'</div>',
-						size : 'large',
-						buttons : [
+						params.sources = (p_sUrl.sources) ? ('string' === typeof p_sUrl.sources) ? [ p_sUrl.sources ] : p_sUrl.sources : [];
+						params.title = ('string' === typeof p_sUrl.title) ? p_sUrl.title : that.lng.titles.sound;
+						params.size = ('string' === typeof p_sUrl.size) ? p_sUrl.size : 'small';
+						params.buttons = [
 							{
 								text : that.lng.buttons.close,
-								click : _close
+								click : ('function' === typeof p_sUrl.onclose) ? [ p_sUrl.onclose, _close, 'close' ] : [ _close, 'close' ]
 							}
-						]
-					},
-					{
-						backdrop : 'static',
-						keyboard : true
-					});
+						];
 
-					clResult.find('audio')[0].onended = _close;
-					clResult.find('audio')[0].play();
+					}
+					else {
 
-				return clResult;
+						params.sources = ('string' === typeof p_sUrl) ? [ p_sUrl ] : [];
+						params.title = ('string' === typeof p_sTitle) ? p_sTitle : that.lng.titles.sound;
+						params.size = 'small';
+						params.buttons = [
+							{
+								text : that.lng.buttons.close,
+								click : ('function' === typeof p_fOnClose) ? [ p_fOnClose, _close, 'close' ] : [ _close, 'close' ]
+							}
+						];
+
+					}
+
+					if ('' === params.url) {
+						popup = that.alert(that.lng.errors.url);
+					}
+					else {
+
+						document.title = params.title;
+
+						params.contentHTML  = '<div class="row">';
+							params.contentHTML += '<audio class="col-xs-12" controls>';
+
+								params.contentHTML += that.lng.errors.audio;
+
+								angular.forEach(params.sources, function(source) {
+
+									if ('string' === typeof source) {
+										source = { url : source, type : '' };
+									}
+
+									if ('' == source.type) {
+										var t = source.url.split('.');
+										source.type = (t.length) ? t[t.length-1] : '';
+									}
+
+									if ('' == source.type) {
+										params.contentHTML += '<source src="' + source.url + '"/>';
+									}
+									else {
+										params.contentHTML += '<source src="' + source.url + '" type="audio/' + source.type + '" />';
+									}
+
+								});
+
+							params.contentHTML += '</audio>';
+						params.contentHTML += '</div>';
+	 
+						popup = that.create(params, { backdrop : 'static', keyboard : true });
+
+						popup.find('audio')[0].onended = _close;
+						popup.find('audio')[0].play();
+
+					}
+
+				return popup;
 
 			};
 
 			this.closeAll = function () {
 				jQuery('.modal').modal('hide');
 				jQuery('.modal-backdrop').remove();
+			};
+
+			this.closeAllPopups = function () {
+				jQuery('.angular-bootstrap-popup').modal('hide');
 			};
 
 })
@@ -324,7 +439,8 @@ angular.module('ngBootstrapPopup', [])
 
 		scope: {
 			titleAlert: '@', titleConfirm: '@', titlePrompt: '@', titlePreview: '@', titleSound: '@',
-			buttonOk: '@', buttonClose: '@', buttonNo: '@', buttonYes: '@'
+			buttonOk: '@', buttonClose: '@', buttonNo: '@', buttonYes: '@',
+			errorAudio: '@', errorUrl: '@'
 		},
 
 		link: function ($scope) {
@@ -356,6 +472,13 @@ angular.module('ngBootstrapPopup', [])
 			}
 			if ($scope.buttonYes) {
 				$popup.lng.buttons.yes = $scope.buttonYes;
+			}
+
+			if ($scope.errorAudio) {
+				$popup.lng.errors.audio = $scope.errorAudio;
+			}
+			if ($scope.errorUrl) {
+				$popup.lng.errors.url = $scope.errorUrl;
 			}
 			
 		}
