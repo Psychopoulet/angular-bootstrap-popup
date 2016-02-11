@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		
+		<!-- INFOS -->
+
+			<meta charset="utf-8" />
+			<title>Tests angular-bootstrap-popup.js</title>
+
+			<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+			<meta name="HandheldFriendly" content="True" />
+			<meta name="MobileOptimized" content="320" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
+			<meta name="google" content="notranslate" />
+			
+		<!-- CSS -->
+
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+			
+	</head>
+
+	<body data-ng-app="AngularBootstrapPopupApp" class="container-fluid">
+
+		<div data-ng-controller="TestsController" class="btn-group">
+			<button type="button" class="btn btn-default" data-ng-click="startAlert();">Start 'alert' tests</button>
+			<button type="button" class="btn btn-default" data-ng-click="startConfirm();">Start 'confirm' tests</button>
+			<button type="button" class="btn btn-default" data-ng-click="startPrompt();">Start 'prompt' tests</button>
+			<button type="button" class="btn btn-default" data-ng-click="startIframe();">Start 'iframe' tests</button>
+			<button type="button" class="btn btn-default" data-ng-click="startSound();">Start 'sound' tests</button>
+			<button type="button" class="btn btn-default" data-ng-click="startCloseAll();">Start 'close all' tests</button>
+			<button type="button" class="btn btn-default" data-ng-click="startClosePopups();">Start 'close all popups' tests</button>
+		</div>
+
+		<!-- JS -->
+
+			<!-- jQuery -->
+
+			<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+
+			<!-- Bootstrap -->
+
+			<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+			<!-- AngularJS -->
+
+			<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+
+			<!-- angular-bootstrap-popup.js -->
+
+			<script type="text/javascript" src="../angular-bootstrap-popup.js"></script>
+
+			<!-- run -->
+
+			<script type="text/javascript">
+
+				"use strict";
+
+				angular.module('AngularBootstrapPopupApp', ['ngBootstrapPopup'])
+
+				.controller('TestsController', ['$scope', '$popup', function($scope, $popup) {
+
+					$scope.startAlert = function() {
+
+						$popup.alert('Message', 'Old method', function() {
+							
+							$popup.alert({
+								title : 'New method',
+								message : 'Message',
+								onclose : function() {
+									$popup.alert('Ok');
+								}
+
+							});
+
+						});
+
+					};
+
+					$scope.startConfirm = function() {
+
+						$popup.confirm('Must click yes', 'Old method', function() {
+
+							$popup.confirm('Must click no', 'Old method', function() {
+								$popup.alert('retry & click no');
+							}, function() {
+
+								$popup.confirm({
+									title : 'New method',
+									message : 'Must click yes',
+									onyes : function() {
+
+										$popup.confirm({
+											title : 'New method',
+											message : 'Must click no',
+											onyes : function() {
+												$popup.alert('retry & click no');
+											},
+											onno : function() {
+												$popup.alert('Ok');
+											}
+										});
+
+									},
+									onno : function() {
+										$popup.alert('retry & click yes');
+									}
+								});
+
+							});
+						
+						}, function() {
+							$popup.alert('retry & click yes');
+						});
+
+					};
+
+					$scope.startPrompt = function() {
+
+						$popup.prompt('Must click ok', 'Old method', function(val) {
+
+							$popup.prompt('Must click close', val, function() {
+								$popup.alert('retry & click close');
+							}, function() {
+								
+								$popup.prompt({
+									title : 'New method',
+									label : 'Must click ok',
+									placeholder : 'a value',
+									val : 'a value',
+									onconfirm : function(val) {
+
+										$popup.prompt({
+											title : 'New method',
+											label : 'Must click close',
+											placeholder : 'a value',
+											val : val,
+											onconfirm : function() {
+												$popup.alert('retry & click close');
+											},
+											onabort : function() {
+												$popup.alert('Ok');
+											}
+										});
+
+									},
+									onabort : function() {
+										$popup.alert('retry & click ok');
+									}
+								});
+
+
+
+							});
+
+						}, function() {
+							$popup.alert('retry & click ok');
+						});
+
+					};
+
+					$scope.startIframe = function() {
+
+						$popup.iframe('https://www.youtube.com/embed/zIA0kaGFIhQ', 'Old method', function() {
+
+							$popup.iframe({
+								url : 'https://www.youtube.com/embed/zIA0kaGFIhQ',
+								title : 'New method',
+								onclose : function() {
+									$popup.alert('Ok');
+								}
+							});
+
+						});
+
+					};
+
+					$scope.startSound = function() {
+
+						$popup.sound('https://test.fr/test.mp3', 'Old method', function() {
+
+							$popup.sound({
+								sources : [
+									{ url : 'https://test.fr/test.mp3', type : 'mp3' },
+									{ url : 'https://test.fr/test.mpeg', type : 'mpeg' }
+								],
+								title : 'New method',
+								onclose : function() {
+
+									$popup.sound({
+										sources : [ 'https://test.fr/test.mp3', 'https://test.fr/test.mpeg' ],
+										title : 'New method',
+										onclose : function() {
+											$popup.alert('Ok');
+										}
+									});
+
+								}
+							});
+
+						});
+
+					};
+
+					$scope.startCloseAll = function() {
+
+						$popup.alert('test');
+						$popup.alert('test');
+						$popup.alert('test');
+						$popup.alert('test');
+						$popup.alert('test');
+						$popup.alert('test');
+
+						$popup.alert('test', '', $popup.closeAll);
+
+					};
+
+					$scope.startClosePopups = function() {
+
+						$popup.alert('test');
+						$popup.alert('test');
+						$popup.alert('test');
+						$popup.alert('test');
+						$popup.alert('test');
+						$popup.alert('test');
+
+						$popup.alert('test', '', $popup.closeAllPopups);
+
+					};
+
+				}]);
+
+			</script>
+			
+	</body>
+	
+</html>
