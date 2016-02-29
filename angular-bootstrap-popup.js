@@ -276,7 +276,7 @@ angular.module('ngBootstrapPopup', [])
 					params.val = ('string' === typeof p_sTitle.val) ? p_sTitle.val : '';
 					params.placeholder = ('string' === typeof p_sTitle.placeholder) ? p_sTitle.placeholder : '';
 
-					params.contentHTML = '<input id="' + sId + '" type="text" class="form-control" value="' + p_sTitle.val + '" placeholder="' + params.placeholder + '" />';
+					params.contentHTML = '<input id="' + sId + '" type="text" class="form-control" value="' + params.val + '" placeholder="' + params.placeholder + '" />';
 					params.title = ('string' === typeof p_sTitle.title) ? p_sTitle.title : that.lng.titles.prompt;
 					params.label = ('string' === typeof p_sTitle.label) ? '<label for="' + sId + '">' + p_sTitle.label + '</label>' : '';
 					params.buttons = [
