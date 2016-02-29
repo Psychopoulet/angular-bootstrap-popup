@@ -43,11 +43,47 @@ angular.module('ngBootstrapPopup', [])
 				p_stPopupOptions = (p_stPopupOptions) ? p_stPopupOptions : {};
 				p_stModaleOptions = (p_stModaleOptions) ? p_stModaleOptions : {};
 
+				if (p_stPopupOptions.type) {
+
+					switch(p_stPopupOptions.type) {
+
+						case 'danger':
+							p_stPopupOptions.backgroundColor = '#f2dede';
+							p_stPopupOptions.borderColor = '#ebccd1';
+							p_stPopupOptions.textColor = '#a94442';
+						break;
+
+						case 'warning':
+							p_stPopupOptions.backgroundColor = '#fcf8e3';
+							p_stPopupOptions.borderColor = '#faebcc';
+							p_stPopupOptions.textColor = '#8a6d3b';
+						break;
+
+						case 'info':
+							p_stPopupOptions.backgroundColor = '#d9edf7';
+							p_stPopupOptions.borderColor = '#bce8f1';
+							p_stPopupOptions.textColor = '#31708f';
+						break;
+
+						case 'success':
+							p_stPopupOptions.backgroundColor = '#dff0d8';
+							p_stPopupOptions.borderColor = '#d6e9c6';
+							p_stPopupOptions.textColor = '#3c763d';
+						break;
+
+					}
+
+				}
+
 				clModal = jQuery('<div class="modal angular-bootstrap-popup fade text-left"></div>');
 
 					clDialog = jQuery('<div class="modal-dialog modal-' + ((p_stPopupOptions.size && 'large' === p_stPopupOptions.size) ? 'lg' : 'sm') + ' modal-vertical-centered"></div>');
 
 						clContent = jQuery('<form action="#" class="modal-content"></form>');
+
+						if (p_stPopupOptions.borderColor) {
+							clContent.css('border-color', p_stPopupOptions.borderColor);
+						}
 
 							clContent.on('submit', function() {
 
@@ -60,6 +96,16 @@ angular.module('ngBootstrapPopup', [])
 							});
 
 							clHeader = jQuery('<div class="modal-header"><h4 class="modal-title"></h4></div>');
+
+								if (p_stPopupOptions.backgroundColor) {
+									clHeader.css('background-color', p_stPopupOptions.backgroundColor);
+								}
+								if (p_stPopupOptions.borderColor) {
+									clHeader.css('border-color', p_stPopupOptions.borderColor);
+								}
+								if (p_stPopupOptions.textColor) {
+									clHeader.css('color', p_stPopupOptions.textColor);
+								}
 
 								if (p_stPopupOptions.title && p_stPopupOptions.title.length) {
 
@@ -106,6 +152,10 @@ angular.module('ngBootstrapPopup', [])
 								if (p_stPopupOptions.buttons && 0 < p_stPopupOptions.buttons.length) {
 
 									clFooter = jQuery('<div class="modal-footer"></div>');
+
+									if (p_stPopupOptions.borderColor) {
+										clFooter.css('border-color', p_stPopupOptions.borderColor);
+									}
 
 									angular.forEach(p_stPopupOptions.buttons, function(stButton) {
 
@@ -176,110 +226,66 @@ angular.module('ngBootstrapPopup', [])
 
 			};
 
-			this.alert = function (p_sMessage, p_sTitle, p_fOnClose) {
+			this.alert = function (data) {
 
-				var params = {};
+				data = ('string' === typeof data) ? { message : data } : data;
 
-				if ('object' === typeof p_sMessage) {
-
-					params.contentHTML = ('string' === typeof p_sMessage.message) ? p_sMessage.message : '';
-					params.title = ('string' === typeof p_sMessage.title) ? p_sMessage.title : that.lng.titles.alert;
-					params.buttons = [
-						{
-							submit : true,
-							text : that.lng.buttons.ok,
-							click : 'close'
-						}
-					];
-
-					params.onsubmit = ('function' === typeof p_sMessage.onclose) ? p_sMessage.onclose : null;
-
-				}
-				else {
-
-					params.contentHTML = ('string' === typeof p_sMessage) ? p_sMessage : '';
-					params.title = ('string' === typeof p_sTitle) ? p_sTitle : that.lng.titles.alert;
-					params.buttons = [
-						{
-							submit : true,
-							text : that.lng.buttons.ok,
-							click : 'close'
-						}
-					];
-
-					params.onsubmit = ('function' === typeof p_fOnClose) ? p_fOnClose : null;
-
-				}
-
-				return that.create(params, { backdrop : 'static', keyboard : true });
+				return that.create({
+					contentHTML: ('string' === typeof data.message) ? data.message : '',
+					title: ('string' === typeof data.title) ? data.title : that.lng.titles.alert,
+					buttons: [ {
+						submit : true,
+						text : that.lng.buttons.ok,
+						click : 'close'
+					} ],
+					type: ('string' === typeof data.type) ? data.type : null,
+					onsubmit: ('function' === typeof data.onclose) ? data.onclose : null
+				}, {
+					backdrop : 'static',
+					keyboard : true
+				});
 
 			};
 
-			this.confirm = function (p_sMessage, p_sTitle, p_fOnYes, p_fOnNo) {
+			this.confirm = function (data) {
 
-				var params = {};
-
-				if ('object' === typeof p_sMessage) {
-
-					params.contentHTML = ('string' === typeof p_sMessage.message) ? p_sMessage.message : '';
-					params.title = ('string' === typeof p_sMessage.title) ? p_sMessage.title : that.lng.titles.confirm;
-					params.buttons = [
+				return that.create({
+					contentHTML: ('string' === typeof data.message) ? data.message : '',
+					title: ('string' === typeof data.title) ? data.title : that.lng.titles.confirm,
+					buttons: [
 						{
 							cls : 'btn-primary',
 							text : that.lng.buttons.yes,
-							click : ('function' === typeof p_sMessage.onyes) ? [ 'close', p_sMessage.onyes ] : 'close'
+							click : ('function' === typeof data.onyes) ? [ 'close', data.onyes ] : 'close'
 						},
 						{
 							submit : true,
 							text : that.lng.buttons.no,
 							click : 'close'
 						}
-					];
-
-					params.onsubmit = ('function' === typeof p_sMessage.onno) ? p_sMessage.onno : null;
-
-				}
-				else {
-
-					params.contentHTML = ('string' === typeof p_sMessage) ? p_sMessage : '';
-					params.title = ('string' === typeof p_sTitle) ? p_sTitle : that.lng.titles.confirm;
-					params.buttons = [
-						{
-							cls : 'btn-primary',
-							text : that.lng.buttons.yes,
-							click : ('function' === typeof p_fOnYes) ? [ p_fOnYes, 'close' ] : 'close'
-						},
-						{
-							submit : true,
-							text : that.lng.buttons.no,
-							click : 'close'
-						}
-					];
-
-					params.onsubmit = ('function' === typeof p_fOnNo) ? p_fOnNo : null;
-
-				}
-
-				return that.create(params, { backdrop : 'static', keyboard : true });
+					],
+					type: ('string' === typeof data.type) ? data.type : null,
+					onsubmit: ('function' === typeof data.onno) ? data.onno : null
+				}, {
+					backdrop : 'static',
+					keyboard : false
+				});
 
 			};
 
-			this.prompt = function (p_sTitle, p_sValue, p_fOnConfirm, p_fOnAbort) {
+			this.prompt = function (data) {
 
 				++m_nCountPrompt;
 
-				var params = {},
-					sId = 'idPopupFormPrompt' + m_nCountPrompt;
+				var sId = 'idPopupFormPrompt' + m_nCountPrompt;
 
-				if ('object' === typeof p_sTitle) {
-
-					params.val = ('string' === typeof p_sTitle.val) ? p_sTitle.val : '';
-					params.placeholder = ('string' === typeof p_sTitle.placeholder) ? p_sTitle.placeholder : '';
-
-					params.contentHTML = '<input id="' + sId + '" type="text" class="form-control" value="' + params.val + '" placeholder="' + params.placeholder + '" />';
-					params.title = ('string' === typeof p_sTitle.title) ? p_sTitle.title : that.lng.titles.prompt;
-					params.label = ('string' === typeof p_sTitle.label) ? '<label for="' + sId + '">' + p_sTitle.label + '</label>' : '';
-					params.buttons = [
+				return that.create({
+					contentHTML: '<div class="form-group">' +
+									(('string' === typeof data.label) ? '<label for="' + sId + '">' + data.label + '</label>' : '') +
+									'<input id="' + sId + '" type="text" class="form-control"' + (('string' === typeof data.val) ? ' value="' + data.val + '"' : '') + (('string' === typeof data.placeholder) ? ' placeholder="' + data.placeholder + '"' : '') + ' />' +
+								'</div>',
+					title: ('string' === typeof data.title) ? data.title : that.lng.titles.prompt,
+					buttons: [
 						{
 							submit : true,
 							cls : 'btn-primary',
@@ -288,95 +294,53 @@ angular.module('ngBootstrapPopup', [])
 						},
 						{
 							text : that.lng.buttons.close,
-							click : ('function' === typeof p_sTitle.onabort) ? [ p_sTitle.onabort, 'close' ] : 'close'
+							click : ('function' === typeof data.onabort) ? [ data.onabort, 'close' ] : 'close'
 						}
-					];
-
-					params.onsubmit = ('function' === typeof p_sTitle.onconfirm) ? function() { p_sTitle.onconfirm(jQuery('#' + sId).val()); } : null;
-
-				}
-				else {
-
-					params.contentHTML = '<input id="' + sId + '" type="text" class="form-control" value="' + (('string' === typeof p_sValue) ? p_sValue : '') + '" />';
-					params.title = ('string' === typeof p_sTitle) ? p_sTitle : that.lng.titles.prompt;
-					params.label = '';
-					params.buttons = [
-						{
-							submit : true,
-							cls : 'btn-primary',
-							text : that.lng.buttons.ok,
-							click : 'close'
-						},
-						{
-							text : that.lng.buttons.close,
-							click : ('function' === typeof p_fOnAbort) ? [ p_fOnAbort, 'close' ] : 'close'
-						}
-					];
-
-					params.onsubmit = ('function' === typeof p_fOnConfirm) ? function() { p_fOnConfirm(jQuery('#' + sId).val()); } : null;
-
-				}
-
-				params.contentHTML = '<div class="form-group">' + params.label + params.contentHTML + '</div>';
-				params.shown = function () { jQuery('#' + sId).focus().val(jQuery('#' + sId).val()); };
-
-				return that.create(params, { backdrop : 'static', keyboard : true });
+					],
+					onsubmit: ('function' === typeof data.onconfirm) ? function() { data.onconfirm(jQuery('#' + sId).val()); } : null,
+					shown: function () { jQuery('#' + sId).focus().val(jQuery('#' + sId).val()); }
+				},
+				{
+					backdrop : 'static',
+					keyboard : false
+				});
 
 			};
 
-			this.iframe = function (p_sUrl, p_sTitle, p_fOnClose) {
+			this.iframe = function (data) {
 
-				var params = {}, documentTitle = document.title;
+				data = ('string' === typeof data) ? { url : data } : data;
+
+				if (!data.url) {
+					return that.alert(that.lng.errors.url);
+				}
+				else {
+
+					var documentTitle = document.title;
 
 					function _close() {
 						document.title = documentTitle;
 					}
 
-					if ('object' === typeof p_sUrl) {
+					document.title = ('string' === typeof data.title) ? data.title : that.lng.titles.preview;
 
-						params.url = ('string' === typeof p_sUrl.url) ? p_sUrl.url : '';
-						params.title = ('string' === typeof p_sUrl.title) ? p_sUrl.title : that.lng.titles.preview;
-						params.size = ('string' === typeof p_sUrl.size) ? p_sUrl.size : 'large';
-						params.buttons = [
-							{
-								submit : true,
-								text : that.lng.buttons.close,
-								click : [ _close, 'close' ]
-							}
-						];
-
-						params.onsubmit = ('function' === typeof p_sUrl.onclose) ? p_sUrl.onclose : null;
-
-					}
-					else {
-
-						params.url = ('string' === typeof p_sUrl) ? p_sUrl : '';
-						params.title = ('string' === typeof p_sTitle) ? p_sTitle : that.lng.titles.preview;
-						params.size = 'large';
-						params.buttons = [
-							{
-								submit : true,
-								text : that.lng.buttons.close,
-								click : [ _close, 'close' ]
-							}
-						];
-
-						params.onsubmit = ('function' === typeof p_fOnClose) ? p_fOnClose : null;
-
-					}
-
-				if ('' === params.url) {
-					return that.alert(that.lng.errors.url);
-				}
-				else {
-
-					document.title = params.title;
-
-					params.contentHTML  = '<div class="embed-responsive embed-responsive-16by9">';
-						params.contentHTML += '<iframe class="embed-responsive-item" src="' + params.url + '" frameborder="0" allowfullscreen></iframe>';
-					params.contentHTML += '</div>';
-	 
-					return that.create(params, { backdrop : 'static', keyboard : true });
+					return that.create({
+						contentHTML: '<div class="embed-responsive embed-responsive-16by9">' +
+										'<iframe class="embed-responsive-item" src="' + data.url + '" frameborder="0" allowfullscreen></iframe>' +
+									'</div>',
+						title: document.title,
+						size: ('string' === typeof data.size) ? data.size : 'large',
+						buttons : [ {
+							submit : true,
+							text : that.lng.buttons.close,
+							click : 'close'
+						} ],
+						onsubmit: ('function' === typeof data.onclose) ? function() { _close(); data.onclose(); } : _close
+					},
+					{
+						backdrop : 'static',
+						keyboard : true
+					});
 
 				}
 

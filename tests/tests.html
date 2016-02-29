@@ -64,66 +64,83 @@
 
 					$scope.startReadme = function() {
 
-						$popup.prompt({
-							title : 'Title', // optional, default if not setted
-							label : 'A label', // optional, not created if not setted
-							val : 'A value', // optional
-							placeholder : 'A placeholder', // optional
-							onconfirm : function(val) { // optional
-								$popup.alert(val);
-							},
-							onabort : function() {} // optional
-						});
+			            $popup.alert('test'); // use this way to a basic usage
 
-						$popup.confirm({
-							title : 'Title', // optional, default if not setted
-							message : 'Confirm ?',
-							onyes : function() { // optional
-								$popup.alert('yes');
-							},
-							onno : function() { // optional
-								$popup.alert('no');
-							}
-						});
+			            $popup.alert({
+			                title : 'Title', // optional, default if not setted
+			                type : 'success', // optional, can be 'info', 'success', 'warning', or 'danger'
+			                message : 'Success',
+			                onclose : function() { } // optional
+			            });
 
-						$popup.iframe('https://www.youtube.com/embed/zIA0kaGFIhQ');
+			            $popup.prompt({
+			                title : 'Title', // optional, default if not setted
+			                label : 'A label', // optional, not created if not setted
+			                val : 'A value', // optional
+			                placeholder : 'A placeholder', // optional
+			                onconfirm : $popup.alert, // optional
+			                onabort : function() {} // optional
+			            });
 
-						$popup.iframe({
-							title : 'Title', // optional, default if not setted
-							url : 'https://www.youtube.com/embed/zIA0kaGFIhQ',
-							onclose : function() { } // optional
-						});
+			            $popup.confirm({
+			                title : 'Title', // optional, default if not setted
+			                message : 'Confirm ?',
+			                onyes : function() { // optional
+			                    
+			                    $popup.alert({
+			                        title : 'Title',
+			                        type : 'success',
+			                        message : 'Success',
+			                        onclose : function() { } // optional
+			                    });
 
-						$popup.sound('https://test.fr/test.mp3');
+			                },
+			                onno : function() { // optional
+			                    
+			                    $popup.alert({
+			                        title : 'Title',
+			                        type : 'danger',
+			                        message : 'Fail',
+			                        onclose : function() { } // optional
+			                    });
 
-						$popup.sound({
-							title : 'Title', // default if not setted
-							sources : [ 'https://test.fr/test.mp3', 'https://test.fr/test.mpeg' ],
-							onclose : function() { } // optional
-						});
+			                }
+			            });
 
-						$popup.sound({
-							sources : [
-								{ url : 'https://test.fr/test.mp3', 'type' : 'mp3' },
-								{ url : 'https://test.fr/test.mpeg', 'type' : 'mpeg' }
-							]
-						});
+			            $popup.iframe('https://www.youtube.com/embed/zIA0kaGFIhQ'); // use this way to a basic usage
+
+			            $popup.iframe({
+			                title : 'Title', // optional, default if not setted
+			                url : 'https://www.youtube.com/embed/zIA0kaGFIhQ',
+			                onclose : function() { } // optional
+			            });
+
+			            $popup.sound('https://test.fr/test.mp3'); // use this way to a basic usage
+
+			            $popup.sound({
+			                title : 'Title', // default if not setted
+			                sources : [ 'https://test.fr/test.mp3', 'https://test.fr/test.mpeg' ],
+			                onclose : function() { } // optional
+			            });
+
+			            $popup.sound({
+			                sources : [
+			                    { url : 'https://test.fr/test.mp3', 'type' : 'mp3' },
+			                    { url : 'https://test.fr/test.mpeg', 'type' : 'mpeg' }
+			                ]
+			            });
 
 					};
 
 					$scope.startAlert = function() {
 
-						$popup.alert('Message', 'Old method', function() {
-							
-							$popup.alert({
-								title : 'New method',
-								message : 'Message',
-								onclose : function() {
-									$popup.alert('Ok');
-								}
+						$popup.alert({
+							message : 'Message',
+							onclose : function() {
 
-							});
+								$popup.alert('Ok');
 
+							}
 						});
 
 						return false;
@@ -132,125 +149,121 @@
 
 					$scope.startConfirm = function() {
 
-						$popup.confirm('Must click yes', 'Old method', function() {
-
-							$popup.confirm('Must click no', 'Old method', function() {
-								$popup.alert('retry & click no');
-							}, function() {
+						$popup.confirm({
+							title : 'New method',
+							message : 'Must click yes',
+							onyes : function() {
 
 								$popup.confirm({
 									title : 'New method',
-									message : 'Must click yes',
+									message : 'Must click no',
 									onyes : function() {
 
-										$popup.confirm({
-											title : 'New method',
-											message : 'Must click no',
-											onyes : function() {
-												$popup.alert('retry & click no');
-											},
-											onno : function() {
-												$popup.alert('Ok');
-											}
+										$popup.alert({
+											type : 'danger',
+											message : 'Retry & click no'
 										});
 
 									},
 									onno : function() {
-										$popup.alert('retry & click yes');
+
+										$popup.alert({
+											type : 'success',
+											message : 'Ok'
+										});
+										
 									}
 								});
 
-							});
-						
-						}, function() {
-							$popup.alert('retry & click yes');
+							},
+							onno : function() {
+
+								$popup.alert({
+									type : 'danger',
+									message : 'Retry & click yes'
+								});
+
+							}
 						});
 
 					};
 
 					$scope.startPrompt = function() {
 
-						$popup.prompt('Must click ok', 'Old method', function(val) {
+						$popup.prompt({
+							label : 'Must click ok',
+							placeholder : 'a placeholder',
+							val : 'a value',
+							onconfirm : function(val) {
 
-							$popup.prompt('Must click close', val, function() {
-								$popup.alert('retry & click close');
-							}, function() {
-								
 								$popup.prompt({
-									title : 'New method',
-									label : 'Must click ok',
+									label : 'Must click close',
 									placeholder : 'a placeholder',
-									val : 'a value',
-									onconfirm : function(val) {
+									val : val,
+									onconfirm : function() {
 
-										$popup.prompt({
-											title : 'New method',
-											label : 'Must click close',
-											placeholder : 'a placeholder',
-											val : val,
-											onconfirm : function() {
-												$popup.alert('retry & click close');
-											},
-											onabort : function() {
-												$popup.alert('Ok');
-											}
+										$popup.alert({
+											type : 'danger',
+											message : 'Retry & click close'
 										});
 
 									},
 									onabort : function() {
-										$popup.alert('retry & click ok');
+
+										$popup.alert({
+											type : 'success',
+											message : 'Ok'
+										});
+
 									}
 								});
 
+							},
+							onabort : function() {
+								
+								$popup.alert({
+									type : 'danger',
+									message : 'Retry & click ok'
+								});
 
-
-							});
-
-						}, function() {
-							$popup.alert('retry & click ok');
+							}
 						});
 
 					};
 
 					$scope.startIframe = function() {
 
-						$popup.iframe('https://www.youtube.com/embed/zIA0kaGFIhQ', 'Old method', function() {
-
-							$popup.iframe({
-								url : 'https://www.youtube.com/embed/zIA0kaGFIhQ',
-								title : 'New method',
-								onclose : function() {
-									$popup.alert('Ok');
-								}
-							});
-
+						$popup.iframe({
+							url : 'https://www.youtube.com/embed/zIA0kaGFIhQ',
+							title : 'Bootloader Playstation',
+							onclose : function() {
+								$popup.iframe('https://www.youtube.com/embed/zIA0kaGFIhQ');
+							}
 						});
 
 					};
 
 					$scope.startSound = function() {
 
-						$popup.sound('https://test.fr/test.mp3', 'Old method', function() {
+						$popup.sound({
+							sources : [
+								{ url : 'https://test.fr/test.mp3', type : 'mp3' },
+								{ url : 'https://test.fr/test.mpeg', type : 'mpeg' }
+							],
+							title : 'New method',
+							onclose : function() {
 
-							$popup.sound({
-								sources : [
-									{ url : 'https://test.fr/test.mp3', type : 'mp3' },
-									{ url : 'https://test.fr/test.mpeg', type : 'mpeg' }
-								],
-								title : 'New method',
-								onclose : function() {
+								$popup.sound({
+									sources : [ 'https://test.fr/test.mp3', 'https://test.fr/test.mpeg' ],
+									title : 'New method',
+									onclose : function() {
 
-									$popup.sound({
-										sources : [ 'https://test.fr/test.mp3', 'https://test.fr/test.mpeg' ],
-										title : 'New method',
-										onclose : function() {
-											$popup.alert('Ok');
-										}
-									});
+										$popup.sound('https://test.fr/test.mp3');
 
-								}
-							});
+									}
+								});
 
+							}
 						});
 
 					};
