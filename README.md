@@ -14,14 +14,21 @@ Created to easily use bootstrap's modal's functions instead of native javascript
         angular.module('myApp', ['ngBootstrapPopup'])
         .controller('ControllerTest', ['$popup', function($popup) {
 
+            $popup.alert('test'); // use this way to a basic usage
+
+            $popup.alert({
+                title : 'Title', // optional, default if not setted
+                type : 'success', // optional, can be 'info', 'success', 'warning', or 'danger'
+                message : 'Success',
+                onclose : function() { } // optional
+            });
+
             $popup.prompt({
                 title : 'Title', // optional, default if not setted
                 label : 'A label', // optional, not created if not setted
                 val : 'A value', // optional
                 placeholder : 'A placeholder', // optional
-                onconfirm : function(val) { // optional
-                    $popup.alert(val);
-                },
+                onconfirm : $popup.alert, // optional
                 onabort : function() {} // optional
             });
 
@@ -29,14 +36,28 @@ Created to easily use bootstrap's modal's functions instead of native javascript
                 title : 'Title', // optional, default if not setted
                 message : 'Confirm ?',
                 onyes : function() { // optional
-                    $popup.alert('yes');
+                    
+                    $popup.alert({
+                        title : 'Title',
+                        type : 'success',
+                        message : 'Success',
+                        onclose : function() { } // optional
+                    });
+
                 },
                 onno : function() { // optional
-                    $popup.alert('no');
+                    
+                    $popup.alert({
+                        title : 'Title',
+                        type : 'danger',
+                        message : 'Fail',
+                        onclose : function() { } // optional
+                    });
+
                 }
             });
 
-            $popup.iframe('https://www.youtube.com/embed/zIA0kaGFIhQ');
+            $popup.iframe('https://www.youtube.com/embed/zIA0kaGFIhQ'); // use this way to a basic usage
 
             $popup.iframe({
                 title : 'Title', // optional, default if not setted
@@ -44,12 +65,10 @@ Created to easily use bootstrap's modal's functions instead of native javascript
                 onclose : function() { } // optional
             });
 
-            $popup.sound('https://test.fr/test.mp3');
+            $popup.sound('https://test.fr/test.mp3'); // use this way to a basic usage
 
             $popup.sound({
-                title : 'Title', // default if not setted
-                sources : [ 'https://test.fr/test.mp3', 'https://test.fr/test.mpeg' ],
-                onclose : function() { } // optional
+                sources : [ 'https://test.fr/test.mp3', 'https://test.fr/test.mpeg' ]
             });
 
             $popup.sound({
