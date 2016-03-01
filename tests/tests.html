@@ -64,71 +64,69 @@
 
 					$scope.startReadme = function() {
 
-			            $popup.alert('test'); // use this way to a basic usage
+						$popup.alert('test'); // use this way to a basic usage
 
-			            $popup.alert({
-			                title : 'Title', // optional, default if not setted
-			                type : 'success', // optional, can be 'info', 'success', 'warning', or 'danger'
-			                message : 'Success',
-			                onclose : function() { } // optional
-			            });
+						$popup.alert({
+							title : 'Title', // optional, default if not setted
+							type : 'success', // optional, can be 'info', 'success', 'warning', or 'danger'
+							message : 'Success',
+							onclose : function() { } // optional
+						});
 
-			            $popup.prompt({
-			                title : 'Title', // optional, default if not setted
-			                label : 'A label', // optional, not created if not setted
-			                val : 'A value', // optional
-			                placeholder : 'A placeholder', // optional
-			                onconfirm : $popup.alert, // optional
-			                onabort : function() {} // optional
-			            });
+						$popup.prompt({
+							title : 'Title', // optional, default if not setted
+							label : 'A label', // optional, not created if not setted
+							val : 'A value', // optional
+							placeholder : 'A placeholder', // optional
+							onconfirm : $popup.alert, // optional
+							onabort : function() {} // optional
+						});
 
-			            $popup.confirm({
-			                title : 'Title', // optional, default if not setted
-			                message : 'Confirm ?',
-			                onyes : function() { // optional
-			                    
-			                    $popup.alert({
-			                        title : 'Title',
-			                        type : 'success',
-			                        message : 'Success',
-			                        onclose : function() { } // optional
-			                    });
+						$popup.confirm({
+							title : 'Title', // optional, default if not setted
+							message : 'Confirm ?',
+							onyes : function() { // optional
+								
+								$popup.alert({
+									title : 'Title',
+									type : 'success',
+									message : 'Success',
+									onclose : function() { } // optional
+								});
 
-			                },
-			                onno : function() { // optional
-			                    
-			                    $popup.alert({
-			                        title : 'Title',
-			                        type : 'danger',
-			                        message : 'Fail',
-			                        onclose : function() { } // optional
-			                    });
+							},
+							onno : function() { // optional
+								
+								$popup.alert({
+									title : 'Title',
+									type : 'danger',
+									message : 'Fail',
+									onclose : function() { } // optional
+								});
 
-			                }
-			            });
+							}
+						});
 
-			            $popup.iframe('https://www.youtube.com/embed/zIA0kaGFIhQ'); // use this way to a basic usage
+						$popup.iframe('https://www.youtube.com/embed/zIA0kaGFIhQ'); // use this way to a basic usage
 
-			            $popup.iframe({
-			                title : 'Title', // optional, default if not setted
-			                url : 'https://www.youtube.com/embed/zIA0kaGFIhQ',
-			                onclose : function() { } // optional
-			            });
+						$popup.iframe({
+							title : 'Title', // optional, default if not setted
+							url : 'https://www.youtube.com/embed/zIA0kaGFIhQ',
+							onclose : function() { } // optional
+						});
 
-			            $popup.sound('https://test.fr/test.mp3'); // use this way to a basic usage
+						$popup.sound('https://test.fr/test.mp3'); // use this way to a basic usage
 
-			            $popup.sound({
-			                title : 'Title', // default if not setted
-			                sources : [ 'https://test.fr/test.mp3', 'https://test.fr/test.mpeg' ],
-			                onclose : function() { } // optional
-			            });
+						$popup.sound({
+							sources : [ 'https://test.fr/test.mp3', 'https://test.fr/test.mpeg' ]
+						});
 
-			            $popup.sound({
-			                sources : [
-			                    { url : 'https://test.fr/test.mp3', 'type' : 'mp3' },
-			                    { url : 'https://test.fr/test.mpeg', 'type' : 'mpeg' }
-			                ]
-			            });
+						$popup.sound({
+							sources : [
+								{ url : 'https://test.fr/test.mp3', 'type' : 'mp3' },
+								{ url : 'https://test.fr/test.mpeg', 'type' : 'mpeg' }
+							]
+						});
 
 					};
 
@@ -250,12 +248,10 @@
 								{ url : 'https://test.fr/test.mp3', type : 'mp3' },
 								{ url : 'https://test.fr/test.mpeg', type : 'mpeg' }
 							],
-							title : 'New method',
 							onclose : function() {
 
 								$popup.sound({
 									sources : [ 'https://test.fr/test.mp3', 'https://test.fr/test.mpeg' ],
-									title : 'New method',
 									onclose : function() {
 
 										$popup.sound('https://test.fr/test.mp3');
@@ -277,7 +273,10 @@
 						$popup.alert('test');
 						$popup.alert('test');
 
-						$popup.alert('test', '', $popup.closeAll);
+						$popup.alert({
+							message: 'test',
+							onclose: $popup.closeAll
+						});
 
 					};
 
@@ -290,7 +289,10 @@
 						$popup.alert('test');
 						$popup.alert('test');
 
-						$popup.alert('test', '', $popup.closeAllPopups);
+						$popup.alert({
+							message: 'test',
+							onclose: $popup.closeAllPopups
+						});
 
 					};
 

@@ -68,9 +68,7 @@ Created to easily use bootstrap's modal's functions instead of native javascript
             $popup.sound('https://test.fr/test.mp3'); // use this way to a basic usage
 
             $popup.sound({
-                title : 'Title', // default if not setted
-                sources : [ 'https://test.fr/test.mp3', 'https://test.fr/test.mpeg' ],
-                onclose : function() { } // optional
+                sources : [ 'https://test.fr/test.mp3', 'https://test.fr/test.mpeg' ]
             });
 
             $popup.sound({

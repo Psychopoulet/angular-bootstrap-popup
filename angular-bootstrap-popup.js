@@ -346,90 +346,69 @@ angular.module('ngBootstrapPopup', [])
 
 			};
 
-			this.sound = function (p_sUrl, p_sTitle, p_fOnClose) {
+			this.sound = function (data) {
 
-				var params = {}, popup, documentTitle = document.title;
+				data = ('string' === typeof data) ? { sources : [ data ] } : data;
+
+				if (!data.sources) {
+					return that.alert(that.lng.errors.sources);
+				}
+				else {
+
+					var documentTitle = document.title, contentHTML, popup;
 
 					function _close() {
 						document.title = documentTitle;
 					}
 
-					if ('object' === typeof p_sUrl) {
+					document.title = ('string' === typeof data.title) ? data.title : that.lng.titles.sound;
 
-						params.sources = (p_sUrl.sources) ? ('string' === typeof p_sUrl.sources) ? [ p_sUrl.sources ] : p_sUrl.sources : [];
-						params.title = ('string' === typeof p_sUrl.title) ? p_sUrl.title : that.lng.titles.sound;
-						params.size = ('string' === typeof p_sUrl.size) ? p_sUrl.size : 'small';
-						params.buttons = [
-							{
-								submit : true,
-								text : that.lng.buttons.close,
-								click : [ _close, 'close' ]
+					contentHTML = '<div class="row"><audio class="col-xs-12" controls>' + that.lng.errors.audio;
+
+						angular.forEach((data.sources) ? ('string' === typeof data.sources) ? [ data.sources ] : data.sources : [], function(source) {
+
+							if ('string' === typeof source) {
+								source = { url : source, type : '' };
 							}
-						];
 
-						params.onsubmit = ('function' === typeof p_sUrl.onclose) ? p_sUrl.onclose : null;
-
-					}
-					else {
-
-						params.sources = ('string' === typeof p_sUrl) ? [ p_sUrl ] : [];
-						params.title = ('string' === typeof p_sTitle) ? p_sTitle : that.lng.titles.sound;
-						params.size = 'small';
-						params.buttons = [
-							{
-								submit : true,
-								text : that.lng.buttons.close,
-								click : [ _close, 'close' ]
+							if ('' === source.type) {
+								var t = source.url.split('.');
+								source.type = (t.length) ? t[t.length-1] : '';
 							}
-						];
 
-						params.onsubmit = ('function' === typeof p_fOnClose) ? p_fOnClose : null;
+							if ('' === source.type) {
+								contentHTML += '<source src="' + source.url + '"/>';
+							}
+							else {
+								contentHTML += '<source src="' + source.url + '" type="audio/' + source.type + '" />';
+							}
 
-					}
+						});
 
-					if ('' === params.url) {
-						popup = that.alert(that.lng.errors.url);
-					}
-					else {
+					contentHTML += '</audio></div>';
 
-						document.title = params.title;
+					popup = that.create({
+						contentHTML: contentHTML,
+						title: document.title,
+						size: 'small',
+						buttons: [ {
+							submit : true,
+							text : that.lng.buttons.close,
+							click : 'close'
+						} ],
+						onsubmit: ('function' === typeof data.onclose) ? function() { _close(); data.onclose(); } : _close
+					},
+					{
+						backdrop : 'static',
+						keyboard : true
+					});
 
-						params.contentHTML  = '<div class="row">';
-							params.contentHTML += '<audio class="col-xs-12" controls>';
+					popup.find('audio')[0].onended = _close;
+					popup.find('audio')[0].play();
 
-								params.contentHTML += that.lng.errors.audio;
+					return popup;
 
-								angular.forEach(params.sources, function(source) {
-
-									if ('string' === typeof source) {
-										source = { url : source, type : '' };
-									}
-
-									if ('' === source.type) {
-										var t = source.url.split('.');
-										source.type = (t.length) ? t[t.length-1] : '';
-									}
-
-									if ('' === source.type) {
-										params.contentHTML += '<source src="' + source.url + '"/>';
-									}
-									else {
-										params.contentHTML += '<source src="' + source.url + '" type="audio/' + source.type + '" />';
-									}
-
-								});
-
-							params.contentHTML += '</audio>';
-						params.contentHTML += '</div>';
-	 
-						popup = that.create(params, { backdrop : 'static', keyboard : true });
-
-						popup.find('audio')[0].onended = _close;
-						popup.find('audio')[0].play();
-
-					}
-
-				return popup;
+				}
 
 			};
 
