@@ -1,6 +1,6 @@
 angular.module('ngBootstrapPopup', [])
 
-.service('$popup', function() {
+.service('$popup', ['$timeout', function($timeout) {
 
 	"use strict";
 
@@ -107,10 +107,6 @@ angular.module('ngBootstrapPopup', [])
 									clHeader.css('color', params.textColor);
 								}
 
-								if ('function' === typeof interact) {
-									clHeader.css('cursor', 'move');
-								}
-
 								if (params.title && params.title.length) {
 
 									if (1 === params.title.length) {
@@ -214,14 +210,15 @@ angular.module('ngBootstrapPopup', [])
 
 				clModal.on('shown.bs.modal', function () {
 
-					if ('function' === typeof params.shown) {
-						params.shown();
-					}
-					else {
-						clContent.find('button[type=submit]').focus();
-					}
-
 					if ('function' === typeof interact) {
+
+						var transition, opacity, draggable = false;
+
+						clHeader.css('cursor', 'move').on('mousedown', function() {
+							draggable = true;
+						}).on('mouseenter', function() { // WTF IE ??
+							draggable = true;
+						});
 
 						interact(clDialog[0]).draggable({
 							inertia: false,
@@ -231,20 +228,49 @@ angular.module('ngBootstrapPopup', [])
 								elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
 							},
 							autoScroll: true,
-							onmove: function (event) {
+							onmove: function (e) {
 
-								var target = event.target,
-									x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-									y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+								if (draggable) {
+										
+									var x = (parseFloat(e.target.dataset.x) || 0) + e.dx,
+										y = (parseFloat(e.target.dataset.y) || 0) + e.dy;
 
-								target.style.webkitTransform = target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+									e.target.style.webkitTransform = e.target.style.transform = 'translate3D(' + x + 'px, ' + y + 'px, 0)';
 
-								target.setAttribute('data-x', x);
-								target.setAttribute('data-y', y);
+									e.target.dataset.x = x;
+									e.target.dataset.y = y;
+
+								}
+							
+							}
+						}).on('dragstart', function(e) {
+
+							transition = e.target.style.transition;
+							opacity = e.target.style.opacity;
+
+							if (draggable) {
+
+								e.target.style.transition = '0s';
+								e.target.style.opacity = '0.4';
 
 							}
+							
+						}).on('dragend', function(e) {
+
+							draggable = false;
+
+							e.target.style.transition = transition;
+							e.target.style.opacity = opacity;
+
 						});
 
+					}
+
+					if ('function' === typeof params.shown) {
+						params.shown();
+					}
+					else {
+						clContent.find('button[type=submit]').focus();
 					}
 
 				})
@@ -453,7 +479,7 @@ angular.module('ngBootstrapPopup', [])
 				jQuery('.angular-bootstrap-popup').modal('hide');
 			};
 
-})
+}])
 
 .directive('popupTranslate', ['$popup', function($popup) {
 
