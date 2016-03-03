@@ -72,6 +72,8 @@
 
 						$popup.alert({
 							title : 'Title', // optional, default if not setted
+							draggable: true, // optional, false by default
+							resizable: true, // optional, false by default
 							type : 'success', // optional, can be 'info', 'success', 'warning', or 'danger'
 							message : 'Success',
 							onclose : function() { } // optional
@@ -137,11 +139,11 @@
 					$scope.startAlert = function() {
 
 						$popup.alert({
+							draggable: true, // optional, false by default
+							resizable: true, // optional, false by default
 							message : 'Message',
 							onclose : function() {
-
-								$popup.alert('Ok');
-
+								$popup.alert({ type : 'success', message : 'Ok' });
 							}
 						});
 
@@ -168,12 +170,7 @@
 
 									},
 									onno : function() {
-
-										$popup.alert({
-											type : 'success',
-											message : 'Ok'
-										});
-										
+										$popup.alert({ type : 'success', message : 'Ok' });
 									}
 								});
 
@@ -211,12 +208,7 @@
 
 									},
 									onabort : function() {
-
-										$popup.alert({
-											type : 'success',
-											message : 'Ok'
-										});
-
+										$popup.alert({ type : 'success', message : 'Ok' });
 									}
 								});
 

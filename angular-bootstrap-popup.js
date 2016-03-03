@@ -43,7 +43,7 @@ angular.module('ngBootstrapPopup', [])
 				params = (params) ? params : {};
 				paramsModale = (paramsModale) ? paramsModale : {};
 
-				if (params.type) {
+				if ('string' === typeof params.type) {
 
 					switch(params.type) {
 
@@ -210,28 +210,34 @@ angular.module('ngBootstrapPopup', [])
 
 				clModal.on('shown.bs.modal', function () {
 
-					if ('function' === typeof interact) {
+					if ('function' === typeof interact && ('boolean' === typeof params.draggable && params.draggable)) {
 
 						var transition, opacity, draggable = false;
 
-						clHeader.css('cursor', 'move').on('mousedown', function() {
-							draggable = true;
-						}).on('mouseenter', function() { // WTF IE ??
-							draggable = true;
-						});
+						clHeader.css('cursor', 'move');
+
+						if ( // WTF IE ??
+							0 <= window.navigator.userAgent.indexOf('MSIE ') ||
+							0 <= window.navigator.userAgent.indexOf('Trident/') ||
+							0 <= window.navigator.userAgent.indexOf('Edge/')
+						) {
+							clHeader.on('mouseenter', function() { draggable = true; });
+						}
+						else {
+							clHeader.on('mousedown', function() { draggable = true; });
+						}
 
 						interact(clDialog[0]).draggable({
-							inertia: false,
+							max: 1,
 							restrict: {
 								restriction: "parent",
-								endOnly: true,
 								elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
 							},
 							autoScroll: true,
 							onmove: function (e) {
 
 								if (draggable) {
-										
+									
 									var x = (parseFloat(e.target.dataset.x) || 0) + e.dx,
 										y = (parseFloat(e.target.dataset.y) || 0) + e.dy;
 
@@ -242,26 +248,68 @@ angular.module('ngBootstrapPopup', [])
 
 								}
 							
+							},
+							onstart: function (e) {
+
+								transition = e.target.style.transition;
+								opacity = e.target.style.opacity;
+
+								if (draggable) {
+
+									e.target.style.transition = '0s';
+									e.target.style.opacity = '0.4';
+
+								}
+							
+							},
+							onend: function (e) {
+
+								draggable = false;
+
+								e.target.style.transition = transition;
+								e.target.style.opacity = opacity;
+
+								transition = opacity = null;
+
 							}
-						}).on('dragstart', function(e) {
+						});
 
-							transition = e.target.style.transition;
-							opacity = e.target.style.opacity;
+					}
 
-							if (draggable) {
+					if ('function' === typeof interact && ('boolean' === typeof params.resizable && params.resizable)) {
+
+						interact(clDialog[0]).resizable({
+							max: 1,
+							restrict: {
+								restriction: "parent",
+								elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+							},
+							preserveAspectRatio: false,
+							edges: { left: true, right: true, bottom: false, top: false },
+							invert: 'reposition',
+							onmove: function (e) {
+
+								e.target.style.width  = e.rect.width + 'px';
+								e.target.style.height = e.rect.height + 'px';
+
+							},
+							onstart: function (e) {
+
+								transition = e.target.style.transition;
+								opacity = e.target.style.opacity;
 
 								e.target.style.transition = '0s';
 								e.target.style.opacity = '0.4';
 
+							},
+							onend: function (e) {
+
+								e.target.style.transition = transition;
+								e.target.style.opacity = opacity;
+
+								transition = opacity = null;
+
 							}
-							
-						}).on('dragend', function(e) {
-
-							draggable = false;
-
-							e.target.style.transition = transition;
-							e.target.style.opacity = opacity;
-
 						});
 
 					}
@@ -294,6 +342,8 @@ angular.module('ngBootstrapPopup', [])
 						text : that.lng.buttons.ok,
 						click : 'close'
 					} ],
+					draggable: ('boolean' === typeof params.draggable) ? params.draggable : false,
+					resizable: ('boolean' === typeof params.resizable) ? params.resizable : false,
 					type: ('string' === typeof params.type) ? params.type : null,
 					onsubmit: ('function' === typeof params.onclose) ? params.onclose : null
 				}, {
@@ -320,6 +370,8 @@ angular.module('ngBootstrapPopup', [])
 							click : 'close'
 						}
 					],
+					draggable: ('boolean' === typeof params.draggable) ? params.draggable : false,
+					resizable: ('boolean' === typeof params.resizable) ? params.resizable : false,
 					type: ('string' === typeof params.type) ? params.type : null,
 					onsubmit: ('function' === typeof params.onno) ? params.onno : null
 				}, {
@@ -353,6 +405,9 @@ angular.module('ngBootstrapPopup', [])
 							click : ('function' === typeof params.onabort) ? [ params.onabort, 'close' ] : 'close'
 						}
 					],
+					draggable: ('boolean' === typeof params.draggable) ? params.draggable : false,
+					resizable: ('boolean' === typeof params.resizable) ? params.resizable : false,
+					type: ('string' === typeof params.type) ? params.type : null,
 					onsubmit: ('function' === typeof params.onconfirm) ? function() { params.onconfirm(jQuery('#' + sId).val()); } : null,
 					shown: function () { jQuery('#' + sId).focus().val(jQuery('#' + sId).val()); }
 				},
@@ -391,6 +446,9 @@ angular.module('ngBootstrapPopup', [])
 							text : that.lng.buttons.close,
 							click : 'close'
 						} ],
+						draggable: ('boolean' === typeof params.draggable) ? params.draggable : false,
+						resizable: ('boolean' === typeof params.resizable) ? params.resizable : false,
+						type: ('string' === typeof params.type) ? params.type : null,
 						onsubmit: ('function' === typeof params.onclose) ? function() { _close(); params.onclose(); } : _close
 					},
 					{
@@ -454,6 +512,9 @@ angular.module('ngBootstrapPopup', [])
 							text : that.lng.buttons.close,
 							click : 'close'
 						} ],
+						draggable: ('boolean' === typeof params.draggable) ? params.draggable : false,
+						resizable: ('boolean' === typeof params.resizable) ? params.resizable : false,
+						type: ('string' === typeof params.type) ? params.type : null,
 						onsubmit: ('function' === typeof params.onclose) ? function() { _close(); params.onclose(); } : _close
 					},
 					{
