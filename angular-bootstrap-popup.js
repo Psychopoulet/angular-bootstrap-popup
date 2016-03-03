@@ -1,6 +1,6 @@
 angular.module('ngBootstrapPopup', [])
 
-.service('$popup', function() {
+.service('$popup', ['$timeout', function($timeout) {
 
 	"use strict";
 
@@ -36,39 +36,39 @@ angular.module('ngBootstrapPopup', [])
 
 		// public
 
-			this.create = function (p_stPopupOptions, p_stModaleOptions) {
+			this.create = function (params, paramsModale) {
 
 				var clModal, clDialog, clContent, clHeader, clBody, clFooter;
 
-				p_stPopupOptions = (p_stPopupOptions) ? p_stPopupOptions : {};
-				p_stModaleOptions = (p_stModaleOptions) ? p_stModaleOptions : {};
+				params = (params) ? params : {};
+				paramsModale = (paramsModale) ? paramsModale : {};
 
-				if (p_stPopupOptions.type) {
+				if ('string' === typeof params.type) {
 
-					switch(p_stPopupOptions.type) {
+					switch(params.type) {
 
 						case 'danger':
-							p_stPopupOptions.backgroundColor = '#f2dede';
-							p_stPopupOptions.borderColor = '#ebccd1';
-							p_stPopupOptions.textColor = '#a94442';
+							params.backgroundColor = '#f2dede';
+							params.borderColor = '#ebccd1';
+							params.textColor = '#a94442';
 						break;
 
 						case 'warning':
-							p_stPopupOptions.backgroundColor = '#fcf8e3';
-							p_stPopupOptions.borderColor = '#faebcc';
-							p_stPopupOptions.textColor = '#8a6d3b';
+							params.backgroundColor = '#fcf8e3';
+							params.borderColor = '#faebcc';
+							params.textColor = '#8a6d3b';
 						break;
 
 						case 'info':
-							p_stPopupOptions.backgroundColor = '#d9edf7';
-							p_stPopupOptions.borderColor = '#bce8f1';
-							p_stPopupOptions.textColor = '#31708f';
+							params.backgroundColor = '#d9edf7';
+							params.borderColor = '#bce8f1';
+							params.textColor = '#31708f';
 						break;
 
 						case 'success':
-							p_stPopupOptions.backgroundColor = '#dff0d8';
-							p_stPopupOptions.borderColor = '#d6e9c6';
-							p_stPopupOptions.textColor = '#3c763d';
+							params.backgroundColor = '#dff0d8';
+							params.borderColor = '#d6e9c6';
+							params.textColor = '#3c763d';
 						break;
 
 					}
@@ -77,18 +77,18 @@ angular.module('ngBootstrapPopup', [])
 
 				clModal = jQuery('<div class="modal angular-bootstrap-popup fade text-left"></div>');
 
-					clDialog = jQuery('<div class="modal-dialog modal-' + ((p_stPopupOptions.size && 'large' === p_stPopupOptions.size) ? 'lg' : 'sm') + ' modal-vertical-centered"></div>');
+					clDialog = jQuery('<div class="modal-dialog modal-' + ((params.size && 'large' === params.size) ? 'lg' : 'sm') + ' modal-vertical-centered"></div>');
 
 						clContent = jQuery('<form action="#" class="modal-content"></form>');
 
-						if (p_stPopupOptions.borderColor) {
-							clContent.css('border-color', p_stPopupOptions.borderColor);
+						if (params.borderColor) {
+							clContent.css('border-color', params.borderColor);
 						}
 
 							clContent.on('submit', function() {
 
-								if ('function' === typeof p_stPopupOptions.onsubmit) {
-									p_stPopupOptions.onsubmit();
+								if ('function' === typeof params.onsubmit) {
+									params.onsubmit();
 								}
 
 								return false;
@@ -97,28 +97,28 @@ angular.module('ngBootstrapPopup', [])
 
 							clHeader = jQuery('<div class="modal-header"><h4 class="modal-title"></h4></div>');
 
-								if (p_stPopupOptions.backgroundColor) {
-									clHeader.css('background-color', p_stPopupOptions.backgroundColor);
+								if (params.backgroundColor) {
+									clHeader.css('background-color', params.backgroundColor);
 								}
-								if (p_stPopupOptions.borderColor) {
-									clHeader.css('border-color', p_stPopupOptions.borderColor);
+								if (params.borderColor) {
+									clHeader.css('border-color', params.borderColor);
 								}
-								if (p_stPopupOptions.textColor) {
-									clHeader.css('color', p_stPopupOptions.textColor);
+								if (params.textColor) {
+									clHeader.css('color', params.textColor);
 								}
 
-								if (p_stPopupOptions.title && p_stPopupOptions.title.length) {
+								if (params.title && params.title.length) {
 
-									if (1 === p_stPopupOptions.title.length) {
-										clHeader.text(p_stPopupOptions.title.toUpperCase());
+									if (1 === params.title.length) {
+										clHeader.text(params.title.toUpperCase());
 									}
 									else {
-										clHeader.text(p_stPopupOptions.title.charAt(0).toUpperCase() + p_stPopupOptions.title.slice(1));
+										clHeader.text(params.title.charAt(0).toUpperCase() + params.title.slice(1));
 									}
 
 								}
-								else if (p_stPopupOptions.title_html) {
-									clHeader.html(p_stPopupOptions.title_html);
+								else if (params.title_html) {
+									clHeader.html(params.title_html);
 								}
 								else {
 									clHeader.text(that.lng.titles.alert);
@@ -130,18 +130,18 @@ angular.module('ngBootstrapPopup', [])
 
 							clBody = jQuery('<div class="modal-body"></div>');
 
-								if (p_stPopupOptions.content && 0 < p_stPopupOptions.content.length) {
+								if (params.content && 0 < params.content.length) {
 
-									if (1 === p_stPopupOptions.content.length) {
-										clBody.text(p_stPopupOptions.content.toUpperCase());
+									if (1 === params.content.length) {
+										clBody.text(params.content.toUpperCase());
 									}
 									else {
-										clBody.text(p_stPopupOptions.content.charAt(0).toUpperCase() + p_stPopupOptions.content.slice(1));
+										clBody.text(params.content.charAt(0).toUpperCase() + params.content.slice(1));
 									}
 
 								}
-								else if (p_stPopupOptions.contentHTML) {
-									clBody.html(p_stPopupOptions.contentHTML);
+								else if (params.contentHTML) {
+									clBody.html(params.contentHTML);
 								}
 								else {
 									clBody.text(that.lng.titles.alert);
@@ -149,15 +149,15 @@ angular.module('ngBootstrapPopup', [])
 
 							clContent.append(clBody);
 
-								if (p_stPopupOptions.buttons && 0 < p_stPopupOptions.buttons.length) {
+								if (params.buttons && 0 < params.buttons.length) {
 
 									clFooter = jQuery('<div class="modal-footer"></div>');
 
-									if (p_stPopupOptions.borderColor) {
-										clFooter.css('border-color', p_stPopupOptions.borderColor);
+									if (params.borderColor) {
+										clFooter.css('border-color', params.borderColor);
 									}
 
-									angular.forEach(p_stPopupOptions.buttons, function(stButton) {
+									angular.forEach(params.buttons, function(stButton) {
 
 										var clButton = jQuery('<button type="' + ((stButton.submit) ? 'submit' : 'button') + '" class="btn btn-default"></button>');
 
@@ -204,14 +204,118 @@ angular.module('ngBootstrapPopup', [])
 
 					clModal.append(clDialog);
 
-					p_stModaleOptions.show = true;
+					paramsModale.show = true;
 
-				clModal.modal(p_stModaleOptions);
+				clModal.modal(paramsModale);
 
 				clModal.on('shown.bs.modal', function () {
 
-					if ('function' === typeof p_stPopupOptions.shown) {
-						p_stPopupOptions.shown();
+					if ('function' === typeof interact && ('boolean' === typeof params.draggable && params.draggable)) {
+
+						var transition, opacity, draggable = false;
+
+						clHeader.css('cursor', 'move');
+
+						if ( // WTF IE ??
+							0 <= window.navigator.userAgent.indexOf('MSIE ') ||
+							0 <= window.navigator.userAgent.indexOf('Trident/') ||
+							0 <= window.navigator.userAgent.indexOf('Edge/')
+						) {
+							clHeader.on('mouseenter', function() { draggable = true; });
+						}
+						else {
+							clHeader.on('mousedown', function() { draggable = true; });
+						}
+
+						interact(clDialog[0]).draggable({
+							max: 1,
+							restrict: {
+								restriction: "parent",
+								elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+							},
+							autoScroll: true,
+							onmove: function (e) {
+
+								if (draggable) {
+									
+									var x = (parseFloat(e.target.dataset.x) || 0) + e.dx,
+										y = (parseFloat(e.target.dataset.y) || 0) + e.dy;
+
+									e.target.style.webkitTransform = e.target.style.transform = 'translate3D(' + x + 'px, ' + y + 'px, 0)';
+
+									e.target.dataset.x = x;
+									e.target.dataset.y = y;
+
+								}
+							
+							},
+							onstart: function (e) {
+
+								transition = e.target.style.transition;
+								opacity = e.target.style.opacity;
+
+								if (draggable) {
+
+									e.target.style.transition = '0s';
+									e.target.style.opacity = '0.4';
+
+								}
+							
+							},
+							onend: function (e) {
+
+								draggable = false;
+
+								e.target.style.transition = transition;
+								e.target.style.opacity = opacity;
+
+								transition = opacity = null;
+
+							}
+						});
+
+					}
+
+					if ('function' === typeof interact && ('boolean' === typeof params.resizable && params.resizable)) {
+
+						interact(clDialog[0]).resizable({
+							max: 1,
+							restrict: {
+								restriction: "parent",
+								elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+							},
+							preserveAspectRatio: false,
+							edges: { left: true, right: true, bottom: false, top: false },
+							invert: 'reposition',
+							onmove: function (e) {
+
+								e.target.style.width  = e.rect.width + 'px';
+								e.target.style.height = e.rect.height + 'px';
+
+							},
+							onstart: function (e) {
+
+								transition = e.target.style.transition;
+								opacity = e.target.style.opacity;
+
+								e.target.style.transition = '0s';
+								e.target.style.opacity = '0.4';
+
+							},
+							onend: function (e) {
+
+								e.target.style.transition = transition;
+								e.target.style.opacity = opacity;
+
+								transition = opacity = null;
+
+							}
+						});
+
+					}
+
+					if ('function' === typeof params.shown) {
+						params.shown();
 					}
 					else {
 						clContent.find('button[type=submit]').focus();
@@ -226,20 +330,22 @@ angular.module('ngBootstrapPopup', [])
 
 			};
 
-			this.alert = function (data) {
+			this.alert = function (params) {
 
-				data = ('string' === typeof data) ? { message : data } : data;
+				params = ('string' === typeof params) ? { message : params } : params;
 
 				return that.create({
-					contentHTML: ('string' === typeof data.message) ? data.message : '',
-					title: ('string' === typeof data.title) ? data.title : that.lng.titles.alert,
+					contentHTML: ('string' === typeof params.message) ? params.message : '',
+					title: ('string' === typeof params.title) ? params.title : that.lng.titles.alert,
 					buttons: [ {
 						submit : true,
 						text : that.lng.buttons.ok,
 						click : 'close'
 					} ],
-					type: ('string' === typeof data.type) ? data.type : null,
-					onsubmit: ('function' === typeof data.onclose) ? data.onclose : null
+					draggable: ('boolean' === typeof params.draggable) ? params.draggable : false,
+					resizable: ('boolean' === typeof params.resizable) ? params.resizable : false,
+					type: ('string' === typeof params.type) ? params.type : null,
+					onsubmit: ('function' === typeof params.onclose) ? params.onclose : null
 				}, {
 					backdrop : 'static',
 					keyboard : true
@@ -247,16 +353,16 @@ angular.module('ngBootstrapPopup', [])
 
 			};
 
-			this.confirm = function (data) {
+			this.confirm = function (params) {
 
 				return that.create({
-					contentHTML: ('string' === typeof data.message) ? data.message : '',
-					title: ('string' === typeof data.title) ? data.title : that.lng.titles.confirm,
+					contentHTML: ('string' === typeof params.message) ? params.message : '',
+					title: ('string' === typeof params.title) ? params.title : that.lng.titles.confirm,
 					buttons: [
 						{
 							cls : 'btn-primary',
 							text : that.lng.buttons.yes,
-							click : ('function' === typeof data.onyes) ? [ 'close', data.onyes ] : 'close'
+							click : ('function' === typeof params.onyes) ? [ 'close', params.onyes ] : 'close'
 						},
 						{
 							submit : true,
@@ -264,8 +370,10 @@ angular.module('ngBootstrapPopup', [])
 							click : 'close'
 						}
 					],
-					type: ('string' === typeof data.type) ? data.type : null,
-					onsubmit: ('function' === typeof data.onno) ? data.onno : null
+					draggable: ('boolean' === typeof params.draggable) ? params.draggable : false,
+					resizable: ('boolean' === typeof params.resizable) ? params.resizable : false,
+					type: ('string' === typeof params.type) ? params.type : null,
+					onsubmit: ('function' === typeof params.onno) ? params.onno : null
 				}, {
 					backdrop : 'static',
 					keyboard : false
@@ -273,7 +381,7 @@ angular.module('ngBootstrapPopup', [])
 
 			};
 
-			this.prompt = function (data) {
+			this.prompt = function (params) {
 
 				++m_nCountPrompt;
 
@@ -281,10 +389,10 @@ angular.module('ngBootstrapPopup', [])
 
 				return that.create({
 					contentHTML: '<div class="form-group">' +
-									(('string' === typeof data.label) ? '<label for="' + sId + '">' + data.label + '</label>' : '') +
-									'<input id="' + sId + '" type="text" class="form-control"' + (('string' === typeof data.val) ? ' value="' + data.val + '"' : '') + (('string' === typeof data.placeholder) ? ' placeholder="' + data.placeholder + '"' : '') + ' />' +
+									(('string' === typeof params.label) ? '<label for="' + sId + '">' + params.label + '</label>' : '') +
+									'<input id="' + sId + '" type="text" class="form-control"' + (('string' === typeof params.val) ? ' value="' + params.val + '"' : '') + (('string' === typeof params.placeholder) ? ' placeholder="' + params.placeholder + '"' : '') + ' />' +
 								'</div>',
-					title: ('string' === typeof data.title) ? data.title : that.lng.titles.prompt,
+					title: ('string' === typeof params.title) ? params.title : that.lng.titles.prompt,
 					buttons: [
 						{
 							submit : true,
@@ -294,10 +402,13 @@ angular.module('ngBootstrapPopup', [])
 						},
 						{
 							text : that.lng.buttons.close,
-							click : ('function' === typeof data.onabort) ? [ data.onabort, 'close' ] : 'close'
+							click : ('function' === typeof params.onabort) ? [ params.onabort, 'close' ] : 'close'
 						}
 					],
-					onsubmit: ('function' === typeof data.onconfirm) ? function() { data.onconfirm(jQuery('#' + sId).val()); } : null,
+					draggable: ('boolean' === typeof params.draggable) ? params.draggable : false,
+					resizable: ('boolean' === typeof params.resizable) ? params.resizable : false,
+					type: ('string' === typeof params.type) ? params.type : null,
+					onsubmit: ('function' === typeof params.onconfirm) ? function() { params.onconfirm(jQuery('#' + sId).val()); } : null,
 					shown: function () { jQuery('#' + sId).focus().val(jQuery('#' + sId).val()); }
 				},
 				{
@@ -307,35 +418,38 @@ angular.module('ngBootstrapPopup', [])
 
 			};
 
-			this.iframe = function (data) {
+			this.iframe = function (params) {
 
-				data = ('string' === typeof data) ? { url : data } : data;
+				var documentTitle = document.title;
 
-				if (!data.url) {
+				function _close() {
+					document.title = documentTitle;
+				}
+
+				params = ('string' === typeof params) ? { url : params } : params;
+
+				if (!params.url) {
 					return that.alert(that.lng.errors.url);
 				}
 				else {
 
-					var documentTitle = document.title;
-
-					function _close() {
-						document.title = documentTitle;
-					}
-
-					document.title = ('string' === typeof data.title) ? data.title : that.lng.titles.preview;
+					document.title = ('string' === typeof params.title) ? params.title : that.lng.titles.preview;
 
 					return that.create({
 						contentHTML: '<div class="embed-responsive embed-responsive-16by9">' +
-										'<iframe class="embed-responsive-item" src="' + data.url + '" frameborder="0" allowfullscreen></iframe>' +
+										'<iframe class="embed-responsive-item" src="' + params.url + '" frameborder="0" allowfullscreen></iframe>' +
 									'</div>',
 						title: document.title,
-						size: ('string' === typeof data.size) ? data.size : 'large',
+						size: ('string' === typeof params.size) ? params.size : 'large',
 						buttons : [ {
 							submit : true,
 							text : that.lng.buttons.close,
 							click : 'close'
 						} ],
-						onsubmit: ('function' === typeof data.onclose) ? function() { _close(); data.onclose(); } : _close
+						draggable: ('boolean' === typeof params.draggable) ? params.draggable : false,
+						resizable: ('boolean' === typeof params.resizable) ? params.resizable : false,
+						type: ('string' === typeof params.type) ? params.type : null,
+						onsubmit: ('function' === typeof params.onclose) ? function() { _close(); params.onclose(); } : _close
 					},
 					{
 						backdrop : 'static',
@@ -346,26 +460,28 @@ angular.module('ngBootstrapPopup', [])
 
 			};
 
-			this.sound = function (data) {
+			this.sound = function (params) {
 
-				data = ('string' === typeof data) ? { sources : [ data ] } : data;
+				var documentTitle = document.title;
 
-				if (!data.sources) {
+				function _close() {
+					document.title = documentTitle;
+				}
+
+				params = ('string' === typeof params) ? { sources : [ params ] } : params;
+
+				if (!params.sources) {
 					return that.alert(that.lng.errors.sources);
 				}
 				else {
 
-					var documentTitle = document.title, contentHTML, popup;
+					var contentHTML, popup;
 
-					function _close() {
-						document.title = documentTitle;
-					}
-
-					document.title = ('string' === typeof data.title) ? data.title : that.lng.titles.sound;
+					document.title = ('string' === typeof params.title) ? params.title : that.lng.titles.sound;
 
 					contentHTML = '<div class="row"><audio class="col-xs-12" controls>' + that.lng.errors.audio;
 
-						angular.forEach((data.sources) ? ('string' === typeof data.sources) ? [ data.sources ] : data.sources : [], function(source) {
+						angular.forEach((params.sources) ? ('string' === typeof params.sources) ? [ params.sources ] : params.sources : [], function(source) {
 
 							if ('string' === typeof source) {
 								source = { url : source, type : '' };
@@ -396,7 +512,10 @@ angular.module('ngBootstrapPopup', [])
 							text : that.lng.buttons.close,
 							click : 'close'
 						} ],
-						onsubmit: ('function' === typeof data.onclose) ? function() { _close(); data.onclose(); } : _close
+						draggable: ('boolean' === typeof params.draggable) ? params.draggable : false,
+						resizable: ('boolean' === typeof params.resizable) ? params.resizable : false,
+						type: ('string' === typeof params.type) ? params.type : null,
+						onsubmit: ('function' === typeof params.onclose) ? function() { _close(); params.onclose(); } : _close
 					},
 					{
 						backdrop : 'static',
@@ -421,7 +540,7 @@ angular.module('ngBootstrapPopup', [])
 				jQuery('.angular-bootstrap-popup').modal('hide');
 			};
 
-})
+}])
 
 .directive('popupTranslate', ['$popup', function($popup) {
 

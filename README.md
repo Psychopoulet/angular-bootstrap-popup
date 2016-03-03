@@ -14,10 +14,16 @@ Created to easily use bootstrap's modal's functions instead of native javascript
         angular.module('myApp', ['ngBootstrapPopup'])
         .controller('ControllerTest', ['$popup', function($popup) {
 
+            // notes :
+            //   - you can add 'type' property to define a bootstrap style ('info', 'success', 'warning', or 'danger')
+            //   - if 'interactjs' library is loaded, you can add 'draggable' & 'resizable' properties (false by default)
+
             $popup.alert('test'); // use this way to a basic usage
 
             $popup.alert({
                 title : 'Title', // optional, default if not setted
+                draggable: true, // optional, false by default
+                resizable: true, // optional, false by default
                 type : 'success', // optional, can be 'info', 'success', 'warning', or 'danger'
                 message : 'Success',
                 onclose : function() { } // optional

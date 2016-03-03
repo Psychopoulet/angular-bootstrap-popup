@@ -48,6 +48,10 @@
 
 			<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js" crossorigin="anonymous"></script>
 
+			<!-- InteractJS -->
+
+			<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/interact.js/1.2.6/interact.min.js" crossorigin="anonymous"></script>
+
 			<!-- angular-bootstrap-popup.js -->
 
 			<script type="text/javascript" src="../angular-bootstrap-popup.min.js"></script>
@@ -68,6 +72,8 @@
 
 						$popup.alert({
 							title : 'Title', // optional, default if not setted
+							draggable: true, // optional, false by default
+							resizable: true, // optional, false by default
 							type : 'success', // optional, can be 'info', 'success', 'warning', or 'danger'
 							message : 'Success',
 							onclose : function() { } // optional
@@ -133,11 +139,11 @@
 					$scope.startAlert = function() {
 
 						$popup.alert({
+							draggable: true, // optional, false by default
+							resizable: true, // optional, false by default
 							message : 'Message',
 							onclose : function() {
-
-								$popup.alert('Ok');
-
+								$popup.alert({ type : 'success', message : 'Ok' });
 							}
 						});
 
@@ -164,12 +170,7 @@
 
 									},
 									onno : function() {
-
-										$popup.alert({
-											type : 'success',
-											message : 'Ok'
-										});
-										
+										$popup.alert({ type : 'success', message : 'Ok' });
 									}
 								});
 
@@ -207,12 +208,7 @@
 
 									},
 									onabort : function() {
-
-										$popup.alert({
-											type : 'success',
-											message : 'Ok'
-										});
-
+										$popup.alert({ type : 'success', message : 'Ok' });
 									}
 								});
 
