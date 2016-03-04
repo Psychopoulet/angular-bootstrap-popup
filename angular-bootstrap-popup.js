@@ -268,8 +268,6 @@ angular.module('ngBootstrapPopup', [])
 								e.target.style.opacity = opacity;
 
                                 transition = opacity = null;
-                                delete e.target.dataset.x;
-                                delete e.target.dataset.y;
 
 							}
 						});
