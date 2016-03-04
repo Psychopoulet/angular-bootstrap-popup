@@ -569,6 +569,18 @@ angular.module('ngBootstrapPopup', [])
 				jQuery('.angular-bootstrap-popup').modal('hide');
 			};
 
+	jQuery(document).on('show.bs.modal', '.modal', function () {
+
+		var zIndex = 1040 + (10 * jQuery('.modal:visible').length);
+		
+		jQuery(this).css('z-index', zIndex);
+
+		setTimeout(function() {
+			jQuery('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+		}, 0);
+
+	});
+
 })
 
 .directive('popupTranslate', ['$popup', function($popup) {
