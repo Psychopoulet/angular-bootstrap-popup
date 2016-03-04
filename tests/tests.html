@@ -54,7 +54,7 @@
 
 			<!-- angular-bootstrap-popup.js -->
 
-			<script type="text/javascript" src="../angular-bootstrap-popup.min.js"></script>
+			<script type="text/javascript" src="../angular-bootstrap-popup.js"></script>
 
 			<!-- run -->
 
@@ -68,60 +68,57 @@
 
 					$scope.startReadme = function() {
 
-						$popup.alert('test'); // use this way to a basic usage
+						$popup.alert('test');
 
 						$popup.alert({
-							title : 'Title', // optional, default if not setted
-							draggable: true, // optional, false by default
-							resizable: true, // optional, false by default
-							type : 'success', // optional, can be 'info', 'success', 'warning', or 'danger'
+							title : 'Title',
 							message : 'Success',
-							onclose : function() { } // optional
+							onclose : function() { }
 						});
 
 						$popup.prompt({
-							title : 'Title', // optional, default if not setted
-							label : 'A label', // optional, not created if not setted
-							val : 'A value', // optional
-							placeholder : 'A placeholder', // optional
-							onconfirm : $popup.alert, // optional
-							onabort : function() {} // optional
+							title : 'Title',
+							label : 'A label',
+							val : 'A value',
+							placeholder : 'A placeholder',
+							onconfirm : $popup.alert,
+							onabort : function() {}
 						});
 
 						$popup.confirm({
-							title : 'Title', // optional, default if not setted
+							title : 'Title',
 							message : 'Confirm ?',
-							onyes : function() { // optional
+							onyes : function() {
 								
 								$popup.alert({
 									title : 'Title',
 									type : 'success',
 									message : 'Success',
-									onclose : function() { } // optional
+									onclose : function() { }
 								});
 
 							},
-							onno : function() { // optional
+							onno : function() {
 								
 								$popup.alert({
 									title : 'Title',
 									type : 'danger',
 									message : 'Fail',
-									onclose : function() { } // optional
+									onclose : function() { }
 								});
 
 							}
 						});
 
-						$popup.iframe('https://www.youtube.com/embed/zIA0kaGFIhQ'); // use this way to a basic usage
+						$popup.iframe('https://www.youtube.com/embed/zIA0kaGFIhQ');
 
 						$popup.iframe({
-							title : 'Title', // optional, default if not setted
+							title : 'Title',
 							url : 'https://www.youtube.com/embed/zIA0kaGFIhQ',
-							onclose : function() { } // optional
+							onclose : function() { }
 						});
 
-						$popup.sound('https://test.fr/test.mp3'); // use this way to a basic usage
+						$popup.sound('https://test.fr/test.mp3');
 
 						$popup.sound({
 							sources : [ 'https://test.fr/test.mp3', 'https://test.fr/test.mpeg' ]
@@ -139,11 +136,45 @@
 					$scope.startAlert = function() {
 
 						$popup.alert({
-							draggable: true, // optional, false by default
-							resizable: true, // optional, false by default
-							message : 'Message',
+							message : 'draggable & resizable',
+							draggable: true, resizable: true,
 							onclose : function() {
-								$popup.alert({ type : 'success', message : 'Ok' });
+
+								$popup.alert({
+									type : 'danger',
+									message : 'type danger',
+									onclose : function() {
+
+										$popup.alert({
+											message : 'backdrop true',
+											backdrop : true,
+											onclose : function() {
+
+												$popup.alert({
+													message : 'backdrop false',
+													backdrop : false,
+													onclose : function() {
+
+														$popup.alert({
+															message : 'keyboard true',
+															keyboard : true,
+															onclose : function() {
+
+																$popup.alert({ type : 'success', message : 'Ok' });
+
+															}
+														});
+
+													}
+												});
+
+											}
+											
+										});
+
+									}
+								});
+
 							}
 						});
 
@@ -229,7 +260,7 @@
 
 						$popup.iframe({
 							url : 'https://www.youtube.com/embed/zIA0kaGFIhQ',
-							title : 'Bootloader Playstation',
+							title : '<h1>Bootloader Playstation</h1>',
 							onclose : function() {
 								$popup.iframe('https://www.youtube.com/embed/zIA0kaGFIhQ');
 							}
