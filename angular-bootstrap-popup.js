@@ -76,7 +76,7 @@ angular.module('ngBootstrapPopup', [])
 
 				clModal = jQuery('<div class="modal angular-bootstrap-popup fade text-left"></div>');
 
-					clDialog = jQuery('<div class="modal-dialog modal-' + ((params.size && 'large' === params.size) ? 'lg' : 'sm') + ' modal-vertical-centered"></div>');
+					clDialog = jQuery('<div class="modal-dialog modal-' + ((params.size && 'large' === params.size) ? 'lg' : 'sm') + '"></div>');
 
 						clContent = jQuery('<form action="#" class="modal-content"></form>');
 
@@ -239,7 +239,7 @@ angular.module('ngBootstrapPopup', [])
 									var x = (parseFloat(e.target.dataset.x) || 0) + e.dx,
 										y = (parseFloat(e.target.dataset.y) || 0) + e.dy;
 
-									e.target.style.webkitTransform = e.target.style.transform = 'translate3D(' + x + 'px, ' + y + 'px, 0)';
+									e.target.style.webkitTransform = e.target.style.msTransform = e.target.style.transform = 'translate3D(' + x + 'px, ' + y + 'px, 0)';
 
 									e.target.dataset.x = x;
 									e.target.dataset.y = y;
@@ -267,7 +267,9 @@ angular.module('ngBootstrapPopup', [])
 								e.target.style.transition = transition;
 								e.target.style.opacity = opacity;
 
-								transition = opacity = null;
+                                transition = opacity = null;
+                                delete e.target.dataset.x;
+                                delete e.target.dataset.y;
 
 							}
 						});
