@@ -440,12 +440,6 @@ angular.module('ngBootstrapPopup', [])
 
 			this.iframe = function (params) {
 
-				var documentTitle = document.title;
-
-				function _close() {
-					document.title = documentTitle;
-				}
-
 				params = ('string' === typeof params) ? { url : params } : params;
 
 				if ('string' !== typeof params.url) {
@@ -453,7 +447,16 @@ angular.module('ngBootstrapPopup', [])
 				}
 				else {
 
+					var documentTitle = document.title, onclose;
+
 					document.title = ('string' === typeof params.title) ? _removeHTML(params.title) : that.lng.titles.preview;
+
+					onclose = ('function' === typeof params.onclose) ? function() {
+						document.title = documentTitle;
+						params.onclose();
+					} : function() {
+						document.title = documentTitle;
+					};
 
 					return that.create({
 
@@ -472,7 +475,7 @@ angular.module('ngBootstrapPopup', [])
 						backdrop: ('undefined' !== typeof params.backdrop) ? params.backdrop : null,
 
 						// close
-						onsubmit: ('function' === typeof params.onclose) ? function() { _close(); params.onclose(); } : _close,
+						onsubmit: onclose,
 						keyboard: ('undefined' !== typeof params.keyboard) ? params.keyboard : null,
 
 						// events
@@ -487,12 +490,6 @@ angular.module('ngBootstrapPopup', [])
 
 			this.sound = function (params) {
 
-				var documentTitle = document.title;
-
-				function _close() {
-					document.title = documentTitle;
-				}
-
 				params = ('string' === typeof params) ? { sources : [ params ] } : params;
 
 				if (!params.sources) {
@@ -500,9 +497,16 @@ angular.module('ngBootstrapPopup', [])
 				}
 				else {
 
-					var contentHTML, popup;
+					var documentTitle = document.title, contentHTML, popup, onclose;
 
 					document.title = ('string' === typeof params.title) ? _removeHTML(params.title) : that.lng.titles.sound;
+
+					onclose = ('function' === typeof params.onclose) ? function() {
+						document.title = documentTitle;
+						params.onclose();
+					} : function() {
+						document.title = documentTitle;
+					};
 
 					contentHTML = '<div class="row"><audio class="col-xs-12" controls>' + that.lng.errors.audio;
 
@@ -543,7 +547,7 @@ angular.module('ngBootstrapPopup', [])
 						backdrop: ('undefined' !== typeof params.backdrop) ? params.backdrop : null,
 
 						// close
-						onsubmit: ('function' === typeof params.onclose) ? function() { _close(); params.onclose(); } : _close,
+						onsubmit: onclose,
 						keyboard: ('undefined' !== typeof params.keyboard) ? params.keyboard : null,
 
 						// events
@@ -552,7 +556,7 @@ angular.module('ngBootstrapPopup', [])
 
 					});
 
-					popup.find('audio')[0].onended = _close;
+					popup.find('audio')[0].onended = onclose;
 					popup.find('audio')[0].play();
 
 					return popup;
