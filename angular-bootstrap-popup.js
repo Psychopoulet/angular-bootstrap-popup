@@ -34,6 +34,17 @@ angular.module('ngBootstrapPopup', [])
 
 	// methodes
 
+		// private
+			
+			function _removeHTML(text) {
+
+				return text.replace(/<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi, '')
+							.replace(/<\/?([a-z][a-z0-9]*)\b[^>]*>/gi, function($0, $1) {
+					return ('').indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+				});
+
+			}
+
 		// public
 
 			this.create = function (params) {
@@ -106,18 +117,8 @@ angular.module('ngBootstrapPopup', [])
 									clHeader.css('color', params.textColor);
 								}
 
-								if (params.title && params.title.length) {
-
-									if (1 === params.title.length) {
-										clHeader.text(params.title.toUpperCase());
-									}
-									else {
-										clHeader.text(params.title.charAt(0).toUpperCase() + params.title.slice(1));
-									}
-
-								}
-								else if (params.title_html) {
-									clHeader.html(params.title_html);
+								if ('string' === typeof params.title) {
+									clHeader.html(params.title);
 								}
 								else {
 									clHeader.text(that.lng.titles.alert);
@@ -452,7 +453,7 @@ angular.module('ngBootstrapPopup', [])
 				}
 				else {
 
-					document.title = ('string' === typeof params.title) ? jQuery(params.title).text() : that.lng.titles.preview;
+					document.title = ('string' === typeof params.title) ? _removeHTML(params.title) : that.lng.titles.preview;
 
 					return that.create({
 
@@ -501,7 +502,7 @@ angular.module('ngBootstrapPopup', [])
 
 					var contentHTML, popup;
 
-					document.title = ('string' === typeof params.title) ? jQuery(params.title).text() : that.lng.titles.sound;
+					document.title = ('string' === typeof params.title) ? _removeHTML(params.title) : that.lng.titles.sound;
 
 					contentHTML = '<div class="row"><audio class="col-xs-12" controls>' + that.lng.errors.audio;
 
@@ -531,7 +532,7 @@ angular.module('ngBootstrapPopup', [])
 
 						// style & data
 						contentHTML: contentHTML,
-						title: document.title,
+						title: ('string' === typeof params.title) ? params.title : that.lng.titles.sound,
 						size: 'small',
 						buttons: [ {
 							submit : true,
@@ -568,6 +569,18 @@ angular.module('ngBootstrapPopup', [])
 			this.closeAllPopups = function () {
 				jQuery('.angular-bootstrap-popup').modal('hide');
 			};
+
+	jQuery(document).on('show.bs.modal', '.modal', function () {
+
+		var zIndex = 1040 + (10 * jQuery('.modal:visible').length);
+		
+		jQuery(this).css('z-index', zIndex);
+
+		setTimeout(function() {
+			jQuery('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+		}, 0);
+
+	});
 
 })
 
