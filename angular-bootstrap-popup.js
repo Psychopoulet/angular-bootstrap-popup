@@ -501,11 +501,9 @@ angular.module('ngBootstrapPopup', [])
 
 					document.title = ('string' === typeof params.title) ? _removeHTML(params.title) : that.lng.titles.sound;
 
-					onclose = ('function' === typeof params.onclose) ? function() {
+					onclose = function() {
 						document.title = documentTitle;
-						params.onclose();
-					} : function() {
-						document.title = documentTitle;
+						if ('function' === typeof params.onclose) { params.onclose(); }
 					};
 
 					contentHTML = '<div class="row"><audio class="col-xs-12" controls>' + that.lng.errors.audio;
@@ -556,7 +554,10 @@ angular.module('ngBootstrapPopup', [])
 
 					});
 
-					popup.find('audio')[0].onended = onclose;
+					popup.find('audio')[0].onended = function() {
+						onclose(); popup.modal('hide');
+					};
+
 					popup.find('audio')[0].play();
 
 					return popup;
