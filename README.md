@@ -34,6 +34,7 @@ Created to easily use bootstrap's modal's functions instead of native javascript
             $popup.prompt({
                 title : 'Title', // optional, default if not setted
                 label : 'A label', // optional, not created if not setted
+                fieldtype : 'password', // optional, 'text' if not setted
                 val : 'A value', // optional
                 placeholder : 'A placeholder', // optional
                 onconfirm : $popup.alert, // optional
