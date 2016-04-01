@@ -128,6 +128,15 @@ angular.module('ngBootstrapPopup', [])
 
 							clBody = jQuery('<div class="modal-body"></div>');
 
+								if ('undefined' !== typeof params.maxheight && null !== params.maxheight) {
+
+									clBody.css({
+										overflow: 'scroll',
+										maxHeight: ('number' === typeof params.maxheight) ? params.maxheight + 'px' : params.maxheight
+									});
+
+								}
+
 								if (params.content && 0 < params.content.length) {
 
 									if (1 === params.content.length) {
@@ -342,6 +351,8 @@ angular.module('ngBootstrapPopup', [])
 					// style & data
 					contentHTML: ('undefined' !== typeof params.message) ? params.message : '',
 					title: ('string' === typeof params.title) ? params.title : that.lng.titles.alert,
+					size: ('string' === typeof params.size) ? params.size : 'small',
+					maxheight: ('undefined' !== typeof params.maxheight) ? params.maxheight : null,
 					buttons: [ {
 						submit : true,
 						text : that.lng.buttons.ok,
@@ -369,6 +380,8 @@ angular.module('ngBootstrapPopup', [])
 					// style & data
 					contentHTML: ('undefined' !== typeof params.message) ? params.message : '',
 					title: ('string' === typeof params.title) ? params.title : that.lng.titles.confirm,
+					size: ('string' === typeof params.size) ? params.size : 'small',
+					maxheight: ('undefined' !== typeof params.maxheight) ? params.maxheight : null,
 					buttons: [
 						{
 							cls : 'btn-primary',
@@ -410,6 +423,8 @@ angular.module('ngBootstrapPopup', [])
 									'<input id="' + sId + '" type="' + (('string' === typeof params.fieldtype) ? params.fieldtype : 'text') + '" class="form-control"' + (('string' === typeof params.val) ? ' value="' + params.val + '"' : '') + (('string' === typeof params.placeholder) ? ' placeholder="' + params.placeholder + '"' : '') + ' />' +
 								'</div>',
 					title: ('string' === typeof params.title) ? params.title : that.lng.titles.prompt,
+					size: ('string' === typeof params.size) ? params.size : 'small',
+					maxheight: ('undefined' !== typeof params.maxheight) ? params.maxheight : null,
 					buttons: [
 						{
 							submit : true,
@@ -466,6 +481,7 @@ angular.module('ngBootstrapPopup', [])
 									'</div>',
 						title: ('string' === typeof params.title) ? params.title : that.lng.titles.preview,
 						size: ('string' === typeof params.size) ? params.size : 'large',
+						maxheight: ('undefined' !== typeof params.maxheight) ? params.maxheight : null,
 						buttons : [ {
 							submit : true,
 							text : that.lng.buttons.close,
@@ -535,7 +551,8 @@ angular.module('ngBootstrapPopup', [])
 						// style & data
 						contentHTML: contentHTML,
 						title: ('string' === typeof params.title) ? params.title : that.lng.titles.sound,
-						size: 'small',
+						size: ('string' === typeof params.size) ? params.size : 'small',
+						maxheight: ('undefined' !== typeof params.maxheight) ? params.maxheight : null,
 						buttons: [ {
 							submit : true,
 							text : that.lng.buttons.close,

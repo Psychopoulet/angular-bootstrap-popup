@@ -15,6 +15,7 @@ Created to easily use bootstrap's modal's functions instead of native javascript
         .controller('ControllerTest', ['$popup', function($popup) {
 
             // notes for each function :
+            //   - you can add 'maxheight' property 
             //   - you can add 'size' property ('large', 'small') ('small' by default, exept for iframe)
             //   - you can add 'backdrop' bootstrap property ('static' by default)
             //   - you can add 'keyboard' bootstrap property (false by default)
