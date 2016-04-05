@@ -85,9 +85,28 @@ angular.module('ngBootstrapPopup', [])
 
 				}
 
+				if ('string' !== typeof params.size) {
+					params.size = '';
+				}
+				else {
+
+					switch(params.size) {
+						case 'large':
+							params.size = 'modal-lg';
+						break;
+						case 'small':
+							params.size = 'modal-sm';
+						break;
+						default:
+							params.size = '';
+						break;
+					}
+
+				}
+
 				clModal = jQuery('<div class="modal angular-bootstrap-popup fade text-left"></div>');
 
-					clDialog = jQuery('<div class="modal-dialog modal-' + ((params.size && 'large' === params.size) ? 'lg' : 'sm') + '"></div>');
+					clDialog = jQuery('<div class="modal-dialog ' + params.size + '"></div>');
 
 						clContent = jQuery('<form action="#" class="modal-content"></form>');
 
@@ -413,15 +432,56 @@ angular.module('ngBootstrapPopup', [])
 
 				++m_nCountPrompt;
 
-				var sId = 'idPopupFormPrompt' + m_nCountPrompt;
+				var id = 'idPopupFormPrompt' + m_nCountPrompt,
+					contentHTML;
+
+				contentHTML = '<div class="form-group">';
+
+					if ('string' === typeof params.label) {
+						contentHTML += '<label for="' + id + '">' + params.label + '</label>';
+					}
+
+					if ('string' === typeof params.prefix || 'string' === typeof params.suffix) {
+						
+						contentHTML += '<div class="input-group">';
+
+							if ('string' === typeof params.prefix) {
+								contentHTML += '<span class="input-group-addon">' + params.prefix + '</span>';
+							}
+
+					}
+
+						contentHTML += '<input';
+						
+							contentHTML += ' id="' + id + '"';
+							contentHTML += ' type="' + (('string' === typeof params.fieldtype) ? params.fieldtype : 'text') + '"';
+							contentHTML += ' class="form-control"';
+
+							if ('string' === typeof params.val) {
+								contentHTML += ' value="' + params.val + '"';
+							}
+							if ('string' === typeof params.placeholder) {
+								contentHTML += ' placeholder="' + params.placeholder + '"';
+							}
+
+						contentHTML += ' />';
+
+					if ('string' === typeof params.prefix || 'string' === typeof params.suffix) {
+
+							if ('string' === typeof params.suffix) {
+								contentHTML += '<span class="input-group-addon">' + params.suffix + '</span>';
+							}
+
+						contentHTML += '</div>';
+						
+					}
+
+				contentHTML += '</div>';
 
 				return that.create({
 
 					// style & data
-					contentHTML: '<div class="form-group">' +
-									(('string' === typeof params.label) ? '<label for="' + sId + '">' + params.label + '</label>' : '') +
-									'<input id="' + sId + '" type="' + (('string' === typeof params.fieldtype) ? params.fieldtype : 'text') + '" class="form-control"' + (('string' === typeof params.val) ? ' value="' + params.val + '"' : '') + (('string' === typeof params.placeholder) ? ' placeholder="' + params.placeholder + '"' : '') + ' />' +
-								'</div>',
+					contentHTML: contentHTML,
 					title: ('string' === typeof params.title) ? params.title : that.lng.titles.prompt,
 					size: ('string' === typeof params.size) ? params.size : 'small',
 					maxheight: ('undefined' !== typeof params.maxheight) ? params.maxheight : null,
@@ -434,20 +494,20 @@ angular.module('ngBootstrapPopup', [])
 						},
 						{
 							text : that.lng.buttons.close,
-							click : ('function' === typeof params.onabort) ? [ params.onabort, 'close' ] : 'close'
+							click : ('function' === typeof params.onabort) ? [ function() { params.onabort(jQuery('#' + id).val()); }, 'close' ] : 'close'
 						}
 					],
 					type: ('undefined' !== typeof params.type) ? params.type : null,
 					backdrop: ('undefined' !== typeof params.backdrop) ? params.backdrop : null,
 
 					// close
-					onsubmit: ('function' === typeof params.onconfirm) ? function() { params.onconfirm(jQuery('#' + sId).val()); } : null,
+					onsubmit: ('function' === typeof params.onconfirm) ? function() { params.onconfirm(jQuery('#' + id).val()); } : null,
 					keyboard: ('undefined' !== typeof params.keyboard) ? params.keyboard : null,
 
 					// events
 					draggable: ('undefined' !== typeof params.draggable) ? params.draggable : null,
 					resizable: ('undefined' !== typeof params.resizable) ? params.resizable : null,
-					shown: function () { jQuery('#' + sId).focus().val(jQuery('#' + sId).val()); }
+					shown: function () { jQuery('#' + id).focus().val(jQuery('#' + id).val()); }
 
 				});
 

@@ -82,7 +82,9 @@
                 			fieldtype : 'password',
 							val : 'A value',
 							placeholder : 'A placeholder',
-							onconfirm : $popup.alert,
+			                prefix : 'https://', // optional
+			                suffix : '.com', // optional
+               				onconfirm : function(val) { $popup.alert(val); }, // optional
 							onabort : function() {}
 						});
 
@@ -222,15 +224,19 @@
 					$scope.startPrompt = function() {
 
 						$popup.prompt({
-							label : 'Must click ok',
+							title : 'Must click ok',
+							label : 'Next prompt label',
 							placeholder : 'a placeholder',
 							val : 'a value',
 							onconfirm : function(val) {
 
 								$popup.prompt({
-									label : 'Must click close',
+									title: 'Must click close',
+									label : 'Previous value : ' + val,
 									placeholder : 'a placeholder',
-									val : val,
+									prefix: 'https://github.com/Psychopoulet/',
+									val : 'angular-bootstrap-popup',
+									size : 'medium',
 									onconfirm : function() {
 
 										$popup.alert({
@@ -239,8 +245,10 @@
 										});
 
 									},
-									onabort : function() {
-										$popup.alert({ type : 'success', message : 'Ok' });
+									onabort : function(val) {
+
+										$popup.alert({ type : 'success', message : 'https://github.com/Psychopoulet/' + val });
+
 									}
 								});
 
