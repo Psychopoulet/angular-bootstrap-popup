@@ -16,7 +16,7 @@ Created to easily use bootstrap's modal's functions instead of native javascript
 
             // notes for each function :
             //   - you can add 'maxheight' property 
-            //   - you can add 'size' property ('large', 'small') ('small' by default, exept for iframe)
+            //   - you can add 'size' property ('large', 'medium', 'small') ('small' by default, exept for iframe)
             //   - you can add 'backdrop' bootstrap property ('static' by default)
             //   - you can add 'keyboard' bootstrap property (false by default)
             //   - you can add 'type' property to define a bootstrap style ('info', 'success', 'warning', or 'danger')
@@ -38,8 +38,10 @@ Created to easily use bootstrap's modal's functions instead of native javascript
                 fieldtype : 'password', // optional, 'text' if not setted
                 val : 'A value', // optional
                 placeholder : 'A placeholder', // optional
-                onconfirm : $popup.alert, // optional
-                onabort : function() {} // optional
+                prefix : 'https://', // optional
+                suffix : '.com', // optional
+                onconfirm : function(val) { $popup.alert(val); }, // optional
+                onabort : function(val) {} // optional
             });
 
             $popup.confirm({
